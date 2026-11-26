@@ -47,18 +47,20 @@ export function createStudioEnvMap(renderer) {
   tex.mapping = THREE.EquirectangularReflectionMapping;
   tex.colorSpace = THREE.SRGBColorSpace;
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const env = pmrem.fromEquirectangular(tex).texture;
+  const target = pmrem.fromEquirectangular(tex);
+  const env = target.texture;
+  env.userData.renderTarget = target;
   tex.dispose();
   pmrem.dispose();
   return env;
 }
 
 export function attachLabLighting(parentGroup) {
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x2a1d4d, 1.38);
+  const hemi = new THREE.HemisphereLight(0xeaf6fa, 0x71583f, 0.85);
   hemi.position.set(0, 2.2, 0);
   parentGroup.add(hemi);
 
-  const key = new THREE.DirectionalLight(0xfff6e8, 2.45);
+  const key = new THREE.DirectionalLight(0xffefd8, 1.75);
   key.position.set(0.95, 1.95, 1.25);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
@@ -69,14 +71,17 @@ export function attachLabLighting(parentGroup) {
   key.shadow.camera.top = 0.95;
   key.shadow.camera.bottom = -0.65;
   key.shadow.bias = -0.0005;
+  key.target = parentGroup;
   parentGroup.add(key);
 
-  const rim = new THREE.DirectionalLight(0x64f2e1, 1.25);
+  const rim = new THREE.DirectionalLight(0xc3e3f5, 0.86);
   rim.position.set(-1.2, 1.15, -0.95);
+  rim.target = parentGroup;
   parentGroup.add(rim);
 
-  const fill = new THREE.DirectionalLight(0xffcb6b, 0.72);
+  const fill = new THREE.DirectionalLight(0xffdebb, 0.36);
   fill.position.set(-0.6, 0.45, 1.1);
+  fill.target = parentGroup;
   parentGroup.add(fill);
 }
 
@@ -197,17 +202,20 @@ export function createOakWoodMaterial() {
   const g = c.getContext("2d");
   g.fillStyle = "#9e6b3b";
   g.fillRect(0, 0, 512, 512);
-  for (let y = 0; y < 512; y += 2) {
-    const wave = Math.sin(y * 0.09) * 16 + ((y * 23) % 17);
-    g.fillStyle = wave > 9 ? "#825228" : wave > 0 ? "#ad7a49" : "#b98756";
-    g.fillRect(0, y, 512, 2);
+  const grain = g.createImageData(512, 512);
+  for (let y = 0; y < 512; y++) for (let x = 0; x < 512; x++) {
+    const sweep = y + 7 * Math.sin(x / 113 + y / 70) + 2 * Math.sin(x / 35);
+    const v = 6 * Math.sin(sweep * 0.30) + 3 * Math.sin(sweep * 0.78) + 1.3 * Math.sin(x * 19.7 + y * 12.1);
+    const i = (y * 512 + x) * 4;
+    grain.data.set([119 + v, 86 + v * 0.8, 57 + v * 0.6, 255],i);
   }
+  g.putImageData(grain,0,0);
   const map = new THREE.CanvasTexture(c);
   map.colorSpace = THREE.SRGBColorSpace;
   return new THREE.MeshStandardMaterial({
     map,
     bumpMap: map,
-    bumpScale: 0.005,
+    bumpScale: 0.00065,
     roughness: 0.62,
     metalness: 0.05,
   });

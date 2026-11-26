@@ -168,6 +168,14 @@ body.stereo-mode .hud-bottom {
   background: var(--plum-glass); padding: 7px 14px; border-radius: 12px;
 }
 
+.lift-control { display:flex; align-items:center; gap:10px; border-radius:12px; padding:4px 12px; align-self:center; background:#172b30f2; color:#fff9e6; font-weight:600;line-height:1.4; font-size:12px; }
+.lift-control input { width:clamp(90px,20vw,170px); accent-color:#ebc66d; cursor:ew-resize; min-height:25px; }
+.lift-control span:last-child { color:#c2d5cc; font-size:10px; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline:3px solid #26a997; outline-offset:3px; }
+.controls-row button:disabled { opacity:.6; cursor:wait; }
+@media (max-width:600px) { .hud-top .approx-pill { display:none; } }
+@media (max-height:530px) { .hud-top .approx-pill,.hud-top .build-step-pill { display:none; } .hud-bottom { gap:2px; } .state-banner { max-height:44px; overflow:auto; } }
+body.stereo-mode .lift-control {display:none;}
 /* Bottom Dock */
 .hud-bottom {
   position: fixed; bottom: max(8px, env(safe-area-inset-bottom)); left: 10px; right: 10px;
@@ -214,3 +222,45 @@ body.stereo-mode .hud-bottom {
 }
 .spinner { width: 42px; height: 42px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); border-top-color: var(--gold); animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@font-face { font-family:LabArabic; src:url('./fonts/IBMPlexSansArabic-Regular.ttf') format('truetype'); font-display:swap; }
+@font-face { font-family:LabArabic; src:url('./fonts/IBMPlexSansArabic-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+body { font-family:LabArabic,Tahoma,sans-serif; }
+#welcome-screen { background:radial-gradient(ellipse at 15% 10%,#335c54,transparent 60%),#142e2b; }
+#welcome-screen .welcome-card { display:grid; grid-template-columns:1.12fr .88fr; align-items:center; gap:clamp(24px,5vw,70px); width:min(910px,95vw); max-width:none; padding:clamp(24px,5vw,65px); background:#faf6e9; border:1px solid #cfccad; border-radius:10px; box-shadow:0 24px 70px #081f1d80; }
+.issue { color:#175e52; font-weight:700; margin:0 0 20px; font-size:22px; }
+.issue span { display:block; font-size:13px; color:#4f675e; font-weight:400; }
+#welcome-screen h1 { color:#163f37; font-size:clamp(34px,4.3vw,57px); line-height:1.25; margin:0 0 16px; }
+#welcome-screen .lead { font-size:clamp(15px,1.5vw,18px); line-height:1.85; color:#40524b; margin-bottom:22px; }
+#welcome-screen .btn { box-shadow:none; border-radius:6px; border:1px solid #195947; padding:12px 15px; font:700 15px LabArabic,Tahoma,sans-serif; }
+#welcome-screen .primary-btn { background:#185747; color:white; }
+#welcome-screen .primary-btn span { margin-inline-start:15px; }
+#welcome-screen .secondary-btn { background:transparent; color:#174e40; }
+.book-links { display:flex; gap:17px; margin-top:17px; flex-wrap:wrap; }
+.book-links a { font-size:13px; color:#305b50; text-underline-offset:4px; }
+.lesson-print { margin:0; position:relative; }
+.lesson-print img { display:block; width:100%; height:auto; border-radius:2px; transform:rotate(-4deg); box-shadow:-2px 3px #dfd9c7,-4px 6px #eee7d7,-6px 9px #c9bfaa,0 16px 30px #1b302c40; }
+.lesson-print figcaption { display:flex; gap:9px; justify-content:center; margin-top:22px; font-size:13px; color:#445a4e; }
+.lesson-print figcaption span { border-inline-start:1px solid #b6b9a4; padding-inline-start:9px; }
+.hud-top .tracking-pill,.hud-top .chip-btn,.lesson-switcher,.state-banner,.sub-exp-bar,.lift-control { background:#193832f2; border-color:#849c86; }
+#btn-sound[aria-pressed="false"] { color:#deded4; }
+.hud-bottom { font-family:LabArabic,Tahoma,sans-serif; }
+@media (min-width:850px) and (min-height:540px) {
+  .hud-bottom { left:auto;right:18px;bottom:18px;width:clamp(260px,24vw,350px);max-width:none; padding:12px; gap:8px; border-radius:12px; border:1px solid #6f8b79; background:#16372feb; }
+  .hud-bottom .state-banner { flex-direction:column;gap:3px;font-size:13px; }
+  .hud-bottom .controls-row { flex-wrap:wrap; }
+  .hud-bottom .hold-btn { flex-basis:100%; }
+  .hud-bottom .aux-btn { flex:1; }
+  .hud-bottom .lift-control { width:100%;justify-content:space-between; }
+}
+@media (max-width:680px) {
+  #welcome-screen .welcome-card { display:flex; flex-direction:column-reverse; align-items:stretch; gap:16px; max-height:94dvh; padding:20px; }
+  .lesson-print { height:clamp(95px,22dvh,170px); overflow:hidden; background:#b6cbb9; border-radius:5px; }
+  .lesson-print img { width:54%; margin:12px auto 0; transform:rotate(-6deg); }
+  .lesson-print figcaption { display:none; }
+  .issue { margin-bottom:8px; display:flex; gap:10px; align-items:baseline; }
+  #welcome-screen h1 { margin-bottom:10px; } #welcome-screen .lead { margin-bottom:13px; }
+  .hud-top-row {gap:4px;} .hud-top-actions {gap:3px;}
+  .hud-bottom .aux-btn {white-space:normal;}
+}
+@media (prefers-reduced-motion: reduce) { .spinner {animation:none;} }

@@ -10,6 +10,8 @@ import {
   createStation3PacksAndSafety,
 } from "./lesson1_ar_vr_scenes.js";
 
+import { createLabSound } from "./lab-sound.js";
+
 const EXP_SLUG_MAP = {
   phase: 0,
   calorimeter: 1,
@@ -79,12 +81,33 @@ let vrRightCam = null;
 let vrControls = null;
 let vrStations = [];
 let vrRafId = 0;
+let renderScale = 1, frameSample = 0, frameAverage = 0;
 
 let activeARIndex = -1;
 let activeVRStation = 0;
 let isHoldingPrimary = false;
 let lastTs = performance.now();
-let audioCtx = null;
+const sound = createLabSound();
+const soundButton = document.getElementById("btn-sound");
+const liftSlider = document.getElementById("page-lift");
+let lastUI = {};
+function paintSoundButton() {
+  soundButton.textContent = sound.enabled ? "الصوت شغّال" : "الصوت مكتوم";
+  soundButton.setAttribute("aria-pressed", String(sound.enabled));
+}
+paintSoundButton();
+soundButton.addEventListener("click", () => { sound.toggle(); paintSoundButton(); });
+document.addEventListener("pointerdown", () => sound.unlock(), {capture: true, passive: true});
+document.addEventListener("keydown", () => sound.unlock(), {capture: true});
+document.addEventListener("visibilitychange", () => { if (document.hidden) { sound.silence(); endHold(); } });
+window.addEventListener("blur", () => { endHold(); });
+liftSlider.addEventListener("input", () => {
+  endHold();
+  const station = getCurrentStation();
+  if (!station) return;
+  station.setLift(Number(liftSlider.value) / 100);
+  updateHud(station.update(0, {heating: false}));
+});
 
 const raycaster = new THREE.Raycaster();
 const pointerNDC = new THREE.Vector2();
@@ -99,26 +122,6 @@ window.__KASHF_L1_DIAG = {
   get buildStepText() { return buildStepPill?.textContent || ""; },
 };
 
-function playTone(kind, stepIdx = 0) {
-  try {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    if (!audioCtx) audioCtx = new AC();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    const t = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.type = kind === "emerge" ? "triangle" : "sine";
-    const notes = [293.66, 329.63, 369.99, 440.0, 493.88, 554.37, 659.25, 739.99, 880.0];
-    const freq = kind === "emerge" ? notes[stepIdx % notes.length] : (kind === "tap" ? 660 : 360);
-    osc.frequency.setValueAtTime(freq, t);
-    g.gain.setValueAtTime(kind === "emerge" ? 0.032 : 0.038, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + (kind === "emerge" ? 0.14 : 0.07));
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.start(t); osc.stop(t + (kind === "emerge" ? 0.15 : 0.08));
-  } catch (_) {}
-}
-
 function getCurrentStation() {
   if (mode === "ar") return activeARIndex >= 0 ? arStations[activeARIndex] : null;
   if (mode === "vr") return vrStations[activeVRStation] || null;
@@ -127,26 +130,35 @@ function getCurrentStation() {
 
 function updateHud(ui) {
   if (!ui) return;
-  lessonBadge.textContent = ui.badge;
-  stateDescription.textContent = ui.stateText;
-  holdLabel.textContent = ui.holdLabel;
+  sound.update(ui);
+  lastUI = ui;
+  const lift = String(Math.round(ui.lift * 100));
+  if (liftSlider.value !== lift) liftSlider.value = lift;
+  btnHold.disabled = Boolean(ui.emerging);
+  btnSecondary.disabled = Boolean(ui.emerging);
+  if (lessonBadge.textContent !== ui.badge) lessonBadge.textContent = ui.badge;
+  if (stateDescription.textContent !== ui.stateText) stateDescription.textContent = ui.stateText;
+  if (holdLabel.textContent !== ui.holdLabel) holdLabel.textContent = ui.holdLabel;
   holdFill.style.width = `${Math.round(ui.progress * 100)}%`;
-  btnSecondary.textContent = ui.secondaryLabel;
+  if (btnSecondary.textContent !== ui.secondaryLabel) btnSecondary.textContent = ui.secondaryLabel;
+  const tertiaryLabel = ui.tertiaryLabel || "↺ إعادة";
+  if (btnTertiary.textContent !== tertiaryLabel) btnTertiary.textContent = tertiaryLabel;
+  btnTertiary.disabled = Boolean(ui.emerging);
   btnTertiary.hidden = !ui.showTertiary;
   if (buildStepPill) {
     if (ui.buildPill) {
       buildStepPill.hidden = false;
-      buildStepPill.textContent = ui.buildPill;
+      if (buildStepPill.textContent !== ui.buildPill) buildStepPill.textContent = ui.buildPill;
     } else {
       buildStepPill.hidden = true;
     }
   }
   if (ui.stepChime !== null && ui.stepChime !== undefined) {
-    playTone("emerge", ui.stepChime);
+    sound.build();
   }
   if (Array.isArray(ui.subTabs)) {
     subExpButtons.forEach((b, idx) => {
-      b.textContent = ui.subTabs[idx] || "";
+      if (b.textContent !== ui.subTabs[idx]) b.textContent = ui.subTabs[idx] || "";
       b.classList.toggle("active", idx === ui.subIndex);
     });
   }
@@ -154,7 +166,7 @@ function updateHud(ui) {
 
 function handleTap(clientX, clientY) {
   const st = getCurrentStation();
-  if (!st?.interactables?.length) return;
+  if (lastUI.emerging || !st?.interactables?.length) return;
   const cam = mode === "ar" ? mindarThree?.camera : vrCamera;
   if (!cam) return;
   pointerNDC.x = (clientX / window.innerWidth) * 2 - 1;
@@ -164,7 +176,7 @@ function handleTap(clientX, clientY) {
   for (const h of hits) {
     if (h.object.parent?.visible !== false && typeof h.object.userData.onTap === "function") {
       h.object.userData.onTap();
-      playTone("tap");
+      updateHud(st.update(0, {heating: false}));
       break;
     }
   }
@@ -204,7 +216,7 @@ window.addEventListener("pointermove", (e) => {
     const pts = Array.from(activePointers.values());
     const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
     if (lastPinchDist > 8) {
-      arCustomScale = THREE.MathUtils.clamp(arCustomScale * (dist / lastPinchDist), 0.85, 2.25);
+      arCustomScale = THREE.MathUtils.clamp(arCustomScale * (dist / lastPinchDist), 0.45, 1.8);
     }
     lastPinchDist = dist;
   }
@@ -226,9 +238,13 @@ window.addEventListener("pointerup", clearPointer);
 window.addEventListener("pointercancel", clearPointer);
 
 async function stopAR() {
-  isHoldingPrimary = false;
+  sound.silence();
+  endHold();
   if (mindarThree) {
-    try { mindarThree.renderer.setAnimationLoop(null); await mindarThree.stop(); } catch (_) {}
+    const tracker = mindarThree;
+    try { tracker.renderer.setAnimationLoop(null); await tracker.stop(); } catch (_) {}
+    tracker.scene.environment?.userData?.renderTarget?.dispose();
+    tracker.renderer.dispose();
     mindarThree = null;
   }
   arAnchors = []; arSmoothGroups = []; arAdapters = []; arStations = [];
@@ -237,7 +253,8 @@ async function stopAR() {
 }
 
 function stopVR() {
-  isHoldingPrimary = false;
+  sound.silence();
+  endHold();
   if (vrRafId) { cancelAnimationFrame(vrRafId); vrRafId = 0; }
   vrCanvas.hidden = true;
   stereoDivider.hidden = true;
@@ -262,7 +279,7 @@ async function startVRMode(stationIdx = 0) {
     vrRenderer = new THREE.WebGLRenderer({ canvas: vrCanvas, antialias: true, powerPreference: "high-performance" });
     vrRenderer.outputColorSpace = THREE.SRGBColorSpace;
     vrRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-    vrRenderer.toneMappingExposure = 1.18;
+    vrRenderer.toneMappingExposure = 0.97;
     vrRenderer.shadowMap.enabled = true;
     vrRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
     vrRenderer.localClippingEnabled = true;
@@ -277,8 +294,8 @@ async function startVRMode(stationIdx = 0) {
 
     // Closer, bolder hero camera framing in 360° VR with full headroom below HUD!
     const aspect = window.innerWidth / Math.max(1, window.innerHeight);
-    const dScale = aspect < 0.8 ? Math.min(1.75, 0.85 / aspect) : 1.0;
-    vrCamera.position.set(0, 0.58 * dScale, 0.92 * dScale);
+    const dScale = aspect < 0.8 ? Math.min(1.75, 0.65 / aspect) : 1.0;
+    vrCamera.position.set(0.50 * dScale, 0.79 * dScale, 1.36 * dScale);
 
     vrControls = new OrbitControls(vrCamera, vrCanvas);
     vrControls.enableDamping = true;
@@ -288,19 +305,14 @@ async function startVRMode(stationIdx = 0) {
     vrControls.maxDistance = 2.2;
     vrControls.minPolarAngle = 0.22;
     vrControls.maxPolarAngle = Math.PI * 0.49;
-    vrControls.target.set(0, 0.21, 0);
+    vrControls.target.set(0, 0.245, 0);
 
     vrStations = [
-      createStation0PhaseAndFridge({ showBooklet: true }),
-      createStation1Calorimeter({ showBooklet: true }),
-      createStation2Crystals({ showBooklet: true }),
-      createStation3PacksAndSafety({ showBooklet: true }),
+      createStation0PhaseAndFridge,
+      createStation1Calorimeter,
+      createStation2Crystals,
+      createStation3PacksAndSafety,
     ];
-    vrStations.forEach((st) => {
-      st.root.scale.setScalar(1.14);
-      vrScene.add(st.root);
-    });
-
     window.addEventListener("deviceorientation", (ev) => {
       if (!stereoVR || ev.gamma === null || ev.beta === null) return;
       const az = THREE.MathUtils.degToRad(ev.gamma) * 0.4;
@@ -321,6 +333,7 @@ async function startVRMode(stationIdx = 0) {
   btnReplayEmerge.hidden = false;
   hudBottom.hidden = false;
   stereoDivider.hidden = !stereoVR;
+  frameVR();
   trackingPill.classList.add("tracked");
   trackingText.textContent = stereoVR ? "وضع نظارة الواقع الافتراضي المزدوج (VR)" : "غرفة «مَعْمَل» 360° • اسحب للالتفات أو التقريب";
   btnSwitchMode.textContent = "📷 كاميرا AR";
@@ -328,8 +341,20 @@ async function startVRMode(stationIdx = 0) {
   lastTs = performance.now();
   function loop(now) {
     vrRafId = requestAnimationFrame(loop);
-    const dt = Math.min(0.05, Math.max(0.001, (now - lastTs) / 1000));
+    const elapsed = Math.max(0, (now - lastTs) / 1000);
     lastTs = now;
+    if (document.hidden) return;
+    const dt = Math.min(1, elapsed);
+    if (elapsed > 0 && elapsed < 2) {
+      frameAverage += elapsed;
+      if (++frameSample === 16) {
+        const mean = frameAverage / frameSample;
+        const nextScale = mean > 0.055 ? Math.max(0.65, renderScale - 0.15)
+          : mean < 0.02 ? Math.min(1, renderScale + 0.05) : renderScale;
+        if (nextScale !== renderScale) { renderScale = nextScale; resizeVR(); }
+        frameSample = 0; frameAverage = 0;
+      }
+    }
 
     vrControls.update();
     const st = vrStations[activeVRStation];
@@ -376,7 +401,15 @@ function selectVRStation(idx) {
   activeVRStation = idx;
   isHoldingPrimary = false;
   btnHold.classList.remove("pressing");
-  vrStations.forEach((st, i) => { st.root.visible = i === idx; });
+  sound.silence();
+  if (typeof vrStations[idx] === "function") {
+    const station = vrStations[idx]({showBooklet: true});
+    if (idx === 0) station.setSubMode(1);
+    vrStations[idx] = station;
+    station.root.scale.setScalar(1.08);
+    vrScene.add(station.root);
+  }
+  vrStations.forEach((st, i) => { if (st.root) st.root.visible = i === idx; });
   document.querySelectorAll(".lesson-tab").forEach((b) => {
     b.classList.toggle("active", Number(b.dataset.station) === idx);
   });
@@ -387,12 +420,28 @@ function selectVRStation(idx) {
 function resizeVR() {
   if (!vrRenderer || !vrCamera) return;
   const w = window.innerWidth, h = window.innerHeight;
-  vrRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  vrRenderer.setPixelRatio(renderScale * Math.min(window.devicePixelRatio || 1, 1.5));
   vrRenderer.setSize(w, h, false);
   vrCamera.aspect = w / h;
+  frameVR();
   vrCamera.updateProjectionMatrix();
 }
 
+function frameVR() {
+  if (!vrCamera) return;
+  const w = window.innerWidth, h = window.innerHeight;
+  if ((w >= 850 && h >= 540) || hudBottom.hidden || stereoVR) {
+    vrCamera.clearViewOffset();
+    return;
+  }
+  const top = hudTop.getBoundingClientRect().bottom, bottom = hudBottom.getBoundingClientRect().top;
+  const offset = THREE.MathUtils.clamp((h - top - bottom) / 2, -0.18 * h, 0.18 * h);
+  vrCamera.setViewOffset(w, h, 0, offset, w, h);
+}
+if (window.ResizeObserver) {
+  const layoutObserver = new ResizeObserver(frameVR);
+  layoutObserver.observe(hudBottom); layoutObserver.observe(hudTop);
+}
 window.addEventListener("resize", () => { if (mode === "vr") resizeVR(); });
 
 /**
@@ -454,7 +503,7 @@ async function startARMode() {
     const { renderer, scene, camera } = mindarThree;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.18;
+    renderer.toneMappingExposure = 1.0;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.localClippingEnabled = true;
@@ -495,10 +544,10 @@ async function startARMode() {
       follower.visible = false;
       scene.add(follower);
 
-      // Adapter tilts at 38° (0.21π) so the camera sees BOTH the 3D extrusion out of the paper AND straight into the front coils/thermometers!
+      // MindAR tracks an XY image. The model base is XZ and its up axis is the page normal.
       const adapter = new THREE.Group();
-      adapter.rotation.x = Math.PI * 0.21;
-      adapter.position.set(0, -0.20, -0.04);
+      adapter.rotation.x = Math.PI / 2;
+      adapter.position.set(0, 0, 0.002);
       adapter.scale.setScalar(arCustomScale);
 
       const spinMount = new THREE.Group();
@@ -528,6 +577,7 @@ async function startARMode() {
         follower.visible = false;
         arSmoothGroups[idx].snapped = false;
         if (activeARIndex === idx) {
+          sound.silence();
           activeARIndex = -1;
           isHoldingPrimary = false;
           hudBottom.hidden = true;
@@ -564,7 +614,7 @@ async function startARMode() {
     lastTs = performance.now();
     renderer.setAnimationLoop(() => {
       const now = performance.now();
-      const dt = Math.min(0.05, Math.max(0.001, (now - lastTs) / 1000));
+      const dt = document.hidden ? 0 : Math.min(1, Math.max(0, (now - lastTs) / 1000));
       lastTs = now;
 
       if (activeARIndex >= 0) {
@@ -598,10 +648,21 @@ async function startARMode() {
   }
 }
 
+function showVRError() {
+  stopVR();
+  mode = "idle";
+  hudTop.hidden = hudBottom.hidden = scanGuide.hidden = true;
+  errorTitle.textContent = "تعذّر فتح المجسّم على الجهاز ده";
+  errorMessage.textContent = "جرّب متصفح بيدعم WebGL، أو افتح صفحات المذكرة عشان تكمّل الدرس.";
+  welcomeScreen.hidden = true;
+  loadingOverlay.hidden = true;
+  errorModal.hidden = false;
+}
+
 // Event Listeners
-document.getElementById("btn-start-vr").addEventListener("click", () => startVRMode(0));
+document.getElementById("btn-start-vr").addEventListener("click", () => startVRMode(0).catch(showVRError));
 document.getElementById("btn-start-ar").addEventListener("click", () => startARMode());
-document.getElementById("btn-error-vr").addEventListener("click", () => startVRMode(0));
+document.getElementById("btn-error-vr").addEventListener("click", () => startVRMode(0).catch(showVRError));
 document.getElementById("btn-error-retry").addEventListener("click", () => startARMode());
 
 btnReplayEmerge.addEventListener("click", () => {
@@ -610,14 +671,14 @@ btnReplayEmerge.addEventListener("click", () => {
   isHoldingPrimary = false;
   arUserYaw = 0;
   st.triggerEmergence?.();
-  playTone("emerge", 0);
+  sound.page();
 });
 
 btnZoomAR.addEventListener("click", () => {
   arZoomPresetIdx = (arZoomPresetIdx + 1) % AR_ZOOM_PRESETS.length;
   arCustomScale = AR_ZOOM_PRESETS[arZoomPresetIdx].scale;
   btnZoomAR.textContent = AR_ZOOM_PRESETS[arZoomPresetIdx].label;
-  playTone("tap");
+  sound.page();
 });
 
 btnStereo.addEventListener("click", () => {
@@ -626,13 +687,13 @@ btnStereo.addEventListener("click", () => {
   document.body.classList.toggle("stereo-mode", stereoVR);
   stereoDivider.hidden = !stereoVR;
   trackingText.textContent = stereoVR ? "وضع نظارة الواقع الافتراضي المزدوج (VR)" : "غرفة «مَعْمَل» 360° • اسحب للالتفات أو التقريب";
-  if (stereoVR && typeof DeviceOrientationEvent?.requestPermission === "function") {
+  if (stereoVR && typeof window.DeviceOrientationEvent?.requestPermission === "function") {
     DeviceOrientationEvent.requestPermission().catch(() => {});
   }
 });
 
 btnSwitchMode.addEventListener("click", () => {
-  if (mode === "ar") startVRMode(activeARIndex >= 0 ? activeARIndex : 0);
+  if (mode === "ar") startVRMode(activeARIndex >= 0 ? activeARIndex : 0).catch(showVRError);
   else startARMode();
 });
 
@@ -652,23 +713,51 @@ subExpButtons.forEach((b) => {
     if (!st) return;
     isHoldingPrimary = false;
     st.setSubMode(Number(b.dataset.subIdx));
-    playTone("tap");
+    updateHud(st.update(0, {heating:false}));
+    sound.page();
   });
 });
 
-btnHold.addEventListener("pointerdown", (e) => { e.preventDefault(); isHoldingPrimary = true; btnHold.classList.add("pressing"); });
-["pointerup", "pointercancel", "pointerleave"].forEach((ev) => {
-  btnHold.addEventListener(ev, () => { isHoldingPrimary = false; btnHold.classList.remove("pressing"); });
+function endHold() {
+  isHoldingPrimary = false;
+  btnHold.classList.remove("pressing");
+}
+function beginHold() {
+  if (btnHold.disabled) return;
+  getCurrentStation()?.primaryAction?.();
+  isHoldingPrimary = true;
+  btnHold.classList.add("pressing");
+}
+btnHold.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
+  btnHold.setPointerCapture(event.pointerId);
+  beginHold();
+});
+for (const event of ["pointerup", "pointercancel", "lostpointercapture", "blur"]) {
+  btnHold.addEventListener(event, endHold);
+}
+btnHold.addEventListener("keydown", (event) => {
+  if ([" ", "Enter"].includes(event.key)) { event.preventDefault(); beginHold(); }
+});
+btnHold.addEventListener("keyup", (event) => {
+  if ([" ", "Enter"].includes(event.key)) { event.preventDefault(); endHold(); }
 });
 btnHold.addEventListener("contextmenu", (e) => e.preventDefault());
-
-btnSecondary.addEventListener("click", () => { getCurrentStation()?.cycleSecondary?.(); playTone("tap"); });
-btnTertiary.addEventListener("click", () => { getCurrentStation()?.reset?.(); playTone("tap"); });
+btnSecondary.addEventListener("click", () => {
+  const st = getCurrentStation();
+  if (st) { st.cycleSecondary(); updateHud(st.update(0, {heating:false})); }
+});
+btnTertiary.addEventListener("click", () => {
+  const st = getCurrentStation();
+  if (!st) return;
+  if (st.tertiaryAction) st.tertiaryAction(); else st.reset?.();
+  updateHud(st.update(0, {heating:false}));
+});
 
 // Auto-launch into the exact requested 3D VR Station when opened from a Magazine QR / PDF Link (?exp=...)
 const params = new URLSearchParams(location.search);
 if (params.has("exp")) {
   const slug = params.get("exp");
   const idx = EXP_SLUG_MAP[slug] ?? 0;
-  startVRMode(idx);
+  startVRMode(idx).catch(showVRError);
 }

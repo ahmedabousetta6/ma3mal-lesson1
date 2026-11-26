@@ -14,7 +14,7 @@ import {
   createTouchHotspot,
 } from "./pbr_engine.js";
 
-const texLoader = new THREE.TextureLoader();
+import { createOpenWorkbook, createWaterSurface } from "./workbook-scene.js";
 
 function easeOutCubic(x) {
   const t = THREE.MathUtils.clamp(x, 0, 1);
@@ -41,10 +41,11 @@ export function createVirtualLabRoom() {
   const floorCanvas = document.createElement("canvas");
   floorCanvas.width = 256; floorCanvas.height = 256;
   const fg = floorCanvas.getContext("2d");
-  fg.fillStyle = "#1b1433"; fg.fillRect(0, 0, 256, 256);
-  fg.strokeStyle = "#2f2456"; fg.lineWidth = 3;
+  fg.fillStyle = "#384844"; fg.fillRect(0, 0, 256, 256);
+  fg.strokeStyle = "#495853"; fg.lineWidth = 3;
   fg.strokeRect(0, 0, 256, 256);
   const floorTex = new THREE.CanvasTexture(floorCanvas);
+  floorTex.colorSpace = THREE.SRGBColorSpace;
   floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
   floorTex.repeat.set(14, 14);
 
@@ -57,7 +58,7 @@ export function createVirtualLabRoom() {
   room.add(floor);
 
   const woodMat = createOakWoodMaterial();
-  const tableTop = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.055, 1.18), woodMat);
+  const tableTop = new THREE.Mesh(new THREE.BoxGeometry(2.75, 0.055, 1.70), woodMat);
   tableTop.position.set(0, -0.034, 0);
   tableTop.receiveShadow = true;
   room.add(tableTop);
@@ -70,40 +71,40 @@ export function createVirtualLabRoom() {
     room.add(leg);
   });
 
-  const boardCanvas = document.createElement("canvas");
-  boardCanvas.width = 1024; boardCanvas.height = 384;
-  const bg = boardCanvas.getContext("2d");
-  bg.fillStyle = "#12362a"; bg.fillRect(0, 0, 1024, 384);
-  bg.strokeStyle = "#e0aa3e"; bg.lineWidth = 18; bg.strokeRect(9, 9, 1006, 366);
-  bg.direction = "rtl";
-  bg.fillStyle = "#ffcb44";
-  bg.font = "bold 46px Tahoma, sans-serif";
-  bg.textAlign = "center";
-  bg.fillText("منظومة «مَعْمَل» التفاعلية • الحرارة رايحة فين؟", 512, 84);
-  bg.fillStyle = "#ffffff";
-  bg.font = "bold 35px Tahoma, sans-serif";
-  bg.fillText("شاهد التجربة وهي تُبنى من صفحة المذكرة جزءًا جزءًا بواقعية كاملة!", 512, 158);
-  bg.fillStyle = "#7de2d1";
-  bg.direction = "ltr";
-  bg.font = "bold 44px 'Segoe UI', sans-serif";
-  bg.fillText("ΔT = T₂ − T₁     |     CuSO₄·5H₂O  ⇄  CuSO₄", 512, 248);
-  bg.direction = "rtl";
-  bg.fillStyle = "#ffe8b3";
-  bg.font = "bold 28px Tahoma, sans-serif";
-  bg.fillText("اسحب للدوران ٣٦٠° أو اضغط «ابنِ من الصفحة» لإعادة التجميع ثلاثي الأبعاد", 512, 326);
-
-  const boardTex = new THREE.CanvasTexture(boardCanvas);
-  boardTex.colorSpace = THREE.SRGBColorSpace;
-  const chalkboard = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.7, 1.02),
-    new THREE.MeshStandardMaterial({ map: boardTex, roughness: 0.62 })
-  );
-  chalkboard.position.set(0, 0.78, -1.55);
-  room.add(chalkboard);
+  // Frosted windows and a recessed shelf give the worktop depth without covering the apparatus.
+  const plaster = new THREE.MeshStandardMaterial({color: 0x506a68, roughness: 1});
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(7, 2.8, 0.08), plaster);
+  wall.position.set(0, 0.75, -1.95);
+  room.add(wall);
+  const frame = new THREE.MeshStandardMaterial({color: 0x263e41, roughness: 0.67});
+  const glass = new THREE.MeshStandardMaterial({color: 0xa9cbc8, emissive: 0x9dcfda,
+    emissiveIntensity: 0.48, roughness: 0.25});
+  const pane = new THREE.Mesh(new THREE.BoxGeometry(2.12, 0.95, 0.025), glass);
+  pane.position.set(-1.35, 0.94, -1.88);
+  room.add(pane);
+  for (let i = 0; i < 5; i++) {
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.035, 1, 0.036), frame);
+    bar.position.set(-2.41 + i * 0.53, 0.94, -1.85); room.add(bar);
+  }
+  for (const y of [0.46, 0.94, 1.42]) {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(2.16, 0.032, 0.04), frame);
+    rail.position.set(-1.35, y, -1.85); room.add(rail);
+  }
+  const shelf = new THREE.Mesh(new THREE.BoxGeometry(1.46, 0.035, 0.23), frame);
+  shelf.position.set(0.74, 0.62, -1.79); room.add(shelf);
+  const bottleProfile = [[0.001,0],[0.048,0],[0.05,0.022],[0.05,0.11],[0.024,0.14],[0.019,0.15],[0.019,0.18]];
+  const bottleGeo = new THREE.LatheGeometry(bottleProfile.map(([r,y]) => new THREE.Vector2(r,y)),18);
+  const bottleColors = [0x925b34,0x53847b,0xb8a87c];
+  for (let i=0; i<7; i++) {
+    const bottle = new THREE.Mesh(bottleGeo, new THREE.MeshStandardMaterial({
+      color:bottleColors[i%3], metalness:0.12, roughness:0.27}));
+    bottle.position.set(0.18 + i*0.158,0.64,-1.76);
+    bottle.scale.setScalar(0.83 + i%3*0.15); room.add(bottle);
+  }
 
   const dome = new THREE.Mesh(
     new THREE.SphereGeometry(5.5, 32, 20),
-    new THREE.MeshBasicMaterial({ color: 0x160f2e, side: THREE.BackSide })
+    new THREE.MeshBasicMaterial({ color: 0x405655, side: THREE.BackSide })
   );
   room.add(dome);
 
@@ -126,44 +127,7 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
   const tmpPt = new THREE.Vector3();
   const tmpNorm = new THREE.Vector3();
 
-  const bookletGroup = new THREE.Group();
-  bookletGroup.visible = showBooklet;
-  if (showBooklet) {
-    const coverBacking = new THREE.Mesh(
-      new THREE.BoxGeometry(1.18, 0.012, 0.70),
-      new THREE.MeshStandardMaterial({ color: 0x24153d, roughness: 0.55 })
-    );
-    coverBacking.position.y = -0.005;
-    coverBacking.receiveShadow = true;
-
-    const paperStack = new THREE.Mesh(
-      new THREE.BoxGeometry(1.14, 0.013, 0.66),
-      new THREE.MeshStandardMaterial({ color: 0xfffdf7, roughness: 0.8 })
-    );
-    paperStack.position.y = 0.0;
-    paperStack.receiveShadow = true;
-
-    const plateTex = texLoader.load(plateUrl);
-    plateTex.colorSpace = THREE.SRGBColorSpace;
-    plateTex.anisotropy = 8;
-    const printedFace = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.10, 0.63),
-      new THREE.MeshStandardMaterial({ map: plateTex, roughness: 0.65, metalness: 0.02 })
-    );
-    printedFace.rotation.x = -Math.PI / 2;
-    printedFace.position.y = 0.007;
-    printedFace.receiveShadow = true;
-
-    const ribbon = new THREE.Mesh(
-      new THREE.BoxGeometry(0.03, 0.003, 0.15),
-      new THREE.MeshStandardMaterial({ color: 0xffcb44, roughness: 0.45 })
-    );
-    ribbon.position.set(0.44, 0.004, 0.37);
-    ribbon.rotation.y = 0.12;
-
-    bookletGroup.add(coverBacking, paperStack, printedFace, ribbon);
-  }
-  root.add(bookletGroup);
+  if (showBooklet) root.add(createOpenWorkbook(plateUrl));
 
   const contactShadow = createContactShadow(0.76);
   contactShadow.position.y = 0.0076;
@@ -280,6 +244,9 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
   let setsMap = new Map();
   let activeSetKey = "default";
   let timer = 0;
+  let manual = false;
+  let settled = false;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let lastAnnouncedStep = -1;
 
   function ensureSet(key) {
@@ -293,7 +260,7 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
       if (!node.isMesh || !node.material) return;
       if (node.material.isShaderMaterial || node.material.depthTest === false) return;
       if (!node.userData.__clippedForStation) {
-        node.material = node.material.clone();
+        // Station-owned materials must stay shared with their simulation controllers.
         node.material.clippingPlanes = [clipPlane];
         node.material.clipShadows = true;
         node.userData.__clippedForStation = true;
@@ -341,7 +308,9 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
 
   function trigger(setKey = activeSetKey) {
     activeSetKey = setKey;
-    timer = 0;
+    manual = false;
+    settled = false;
+    timer = reducedMotion.matches ? ensureSet(setKey).maxTime : 0;
     lastAnnouncedStep = -1;
     update(0);
   }
@@ -359,11 +328,13 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
   function update(dt) {
     const curSet = ensureSet(activeSetKey);
     const totalDuration = curSet.maxTime;
-    timer = Math.min(totalDuration + 0.6, timer + dt);
+    if (!manual) timer = Math.min(totalDuration + 0.6, timer + dt);
     updateClipPlaneWorld();
 
     const overall = THREE.MathUtils.clamp(timer / totalDuration, 0, 1);
     const emerging = timer < totalDuration;
+    if (settled && !emerging) return {emerging: false, overall: 1, buildPill: "", stepChime: null};
+    settled = !emerging;
 
     // 1) Initial Laser Curtain Sweep across the Printed Diagram (0.00s -> 0.48s)
     if (timer < 0.50) {
@@ -399,7 +370,7 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
         st.group.scale.set(xz, sy, xz);
 
         // Holographic cyan blueprint pulse that solidifies into real PBR material!
-        const flashAmt = Math.sin(raw * Math.PI) * 0.85;
+        const flashAmt = Math.sin(raw * Math.PI) * 0.21;
         st.flashNodes.forEach((n) => {
           n.material.emissive.copy(n.userData.__baseEmissive).lerp(holoCyan, flashAmt);
         });
@@ -420,6 +391,7 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
 
     // 3) Laser Build Ring & Sparks tracking the active part height
     if (emerging) {
+      fxGroup.visible = true;
       const pulse = 0.6 + 0.35 * Math.sin(timer * 11.0);
       portalRingMat.opacity = pulse * (1 - 0.45 * Math.pow(overall, 3));
       portalRing.rotation.z = timer * 1.4;
@@ -443,7 +415,8 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
         s.mesh.scale.setScalar(1.1 - u * 0.7);
       });
     } else {
-      portalRingMat.opacity = 0.22;
+      fxGroup.visible = false;
+      portalRingMat.opacity = 0;
       blueprintMat.opacity = 0;
       bracketMat.opacity = showBooklet ? 0.25 : 0.62;
       laserBuildRing.visible = false;
@@ -486,7 +459,13 @@ function createBookletEmergenceController(root, plateUrl, { showBooklet = true }
     };
   }
 
-  return { clipPlane, addStage, addPopup, trigger, update };
+  function setLift(fraction) {
+    manual = true;
+    settled = false;
+    timer = THREE.MathUtils.clamp(fraction, 0, 1) * ensureSet(activeSetKey).maxTime;
+    update(0);
+  }
+  return { clipPlane, addStage, addPopup, trigger, update, setLift };
 }
 
 /**
@@ -562,7 +541,8 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
     color: 0x1ea8f0, roughness: 0.05, clearcoat: 1.0, ior: 1.33, transparent: true, opacity: 0.52, depthWrite: false,
   });
   const waterCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.156, 0.21, 36), waterMat);
-  partA6IceWater.add(waterCyl);
+  const surface = createWaterSurface(0.157);
+  partA6IceWater.add(waterCyl, surface.mesh);
 
   const iceMat = new THREE.MeshPhysicalMaterial({
     color: 0xc8f7ff, roughness: 0.09, clearcoat: 1.0, ior: 1.31, reflectivity: 1.0, transparent: true, opacity: 0.56,
@@ -666,7 +646,7 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
 
   // Part 2: Double-Walled Insulated Fridge Cabinet + Warm Interior LED Light
   const partB2Cabinet = new THREE.Group();
-  const outerEnamel = new THREE.MeshPhysicalMaterial({ color: 0xf2f6fc, roughness: 0.18, metalness: 0.18, clearcoat: 0.85 });
+  const outerEnamel = new THREE.MeshPhysicalMaterial({ color: 0x528079, roughness: 0.32, metalness: 0.32, clearcoat: 0.62 });
   const innerLiner = new THREE.MeshPhysicalMaterial({ color: 0xe4f5ff, roughness: 0.22, clearcoat: 0.6 });
 
   const backWall = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.54, 0.028), outerEnamel);
@@ -685,7 +665,7 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
     new THREE.MeshBasicMaterial({ color: 0xe6fbff })
   );
   ledStrip.position.set(0, 0.548, 0.04);
-  const fridgeInteriorLight = new THREE.PointLight(0xdaf6ff, 0.75, 0.65);
+  const fridgeInteriorLight = new THREE.PointLight(0xdaf6ff, 0.017, 0.65);
   fridgeInteriorLight.position.set(0, 0.34, 0.04);
 
   partB2Cabinet.add(backWall, leftWall, rightWall, topWall, botFloor, ledStrip, fridgeInteriorLight);
@@ -827,6 +807,16 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
   const dHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.0075, 0.0075, 0.22, 14), chromeMat);
   dHandle.position.set(-0.315, 0.02, 0.024);
 
+  const gasket = new THREE.MeshStandardMaterial({color: 0x304747, roughness: 0.86});
+  for (const x of [-0.318, -0.028]) {
+    const seal = new THREE.Mesh(new THREE.BoxGeometry(0.006, 0.475, 0.012), gasket);
+    seal.position.set(x, 0, -0.011); doorPivot.add(seal);
+  }
+  const ventMat = new THREE.MeshStandardMaterial({color: 0x344b49, roughness: 0.65});
+  const vent = new THREE.InstancedMesh(new THREE.BoxGeometry(0.004,0.014,0.003), ventMat, 28);
+  for (let i = 0; i < 28; i++) vent.setMatrixAt(i,
+    new THREE.Matrix4().makeTranslation(-0.14 + i * 0.0105,0.032,0.127));
+  partB1Chassis.add(vent);
   doorPivot.add(dTop, dBot, dLeft, dRight, dGlass, dHandle);
   doorPivot.rotation.y = 1.85;
   partB8Door.add(doorPivot);
@@ -858,7 +848,32 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
   });
   subB.add(partB9Flow);
 
-  let doorWideOpen = true;
+  let doorWideOpen = true, showEnergy = false, cyclePosition = 0;
+  const energyPaths = [
+    [[0.012,0.23,0.09],[0.006,0.35,0.12],[-0.08,0.45,-0.04]],
+    [[0.10,0.38,-0.15],[0.23,0.40,-0.14],[0.33,0.48,-0.055]]
+  ].map(points => new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p))));
+  const up = new THREE.Vector3(0, 1, 0), tangent = new THREE.Vector3();
+  const heatRoutes = new THREE.Group();
+  const indicators = [];
+  energyPaths.forEach((curve, path) => {
+    const mat = new THREE.MeshBasicMaterial({color:path === 0 ? 0x14799a : 0xdd572c});
+    heatRoutes.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 28, 0.0018, 5, false),mat));
+    for (let i = 0; i < 3; i++) {
+      const arrow = new THREE.Mesh(new THREE.ConeGeometry(0.012,0.027,12),mat);
+      heatRoutes.add(arrow); indicators.push({arrow,curve,offset:i/3});
+    }
+  });
+  heatRoutes.visible = false;
+  subB.add(heatRoutes);
+  function toggleEnergy() {
+    if (subMode !== 1) return;
+    showEnergy = !showEnergy;
+    outerEnamel.transparent = showEnergy;
+    outerEnamel.opacity = showEnergy ? 0.23 : 1;
+    outerEnamel.depthWrite = !showEnergy;
+    outerEnamel.needsUpdate = true;
+  }
   const hsDoor = createTouchHotspot(new THREE.Vector3(0.24, 0.30, 0.16), () => {
     doorWideOpen = !doorWideOpen;
   }, 0.12, 0xffcb44);
@@ -921,7 +936,10 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
 
       const wFill = melt * (1 - 0.28 * boil);
       waterCyl.visible = wFill > 0.03;
+      surface.mesh.visible = waterCyl.visible;
       if (waterCyl.visible) {
+        surface.mesh.position.y = beakerY + 0.013 + 0.21 * wFill;
+        surface.animate(clock, 0.12 + 0.75 * boil);
         waterCyl.scale.set(1, Math.max(0.05, wFill), 1);
         waterCyl.position.y = beakerY + 0.105 * wFill + 0.012;
       }
@@ -962,6 +980,8 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
 
       return {
         progress: em.emerging ? em.overall : heat,
+        sound: canHeat ? (boil > 0.15 ? "boil" : "burner") : "",
+        soundLevel: heat,
         badge: "ص ٢ • تحوّلات الحالة",
         subTabs: ["١. تحوّلات الماء الستة", "٢. دورة التبريد بالثلاجة"],
         subIndex: 0,
@@ -969,47 +989,60 @@ export function createStation0PhaseAndFridge({ showBooklet = true } = {}) {
         stateText: em.emerging
           ? em.caption
           : heat < 0.2
-            ? "الحالة الصلبة: جزيئات H₂O تهتز في مكانها بروابط تساهمية ثابتة. استمر بالضغط للتسخين!"
+            ? "في التلج، جزيئات الميّه بتهتز حوالين أماكن شبه ثابتة. دوس وسخّن وشوف ترتيبها بيتغيّر إزاي."
             : heat < 0.58
-              ? "انصهار (ماص للحرارة): تزداد المسافات البينية وتضعف قوى التجاذب دون انكسار الروابط داخل H₂O."
-              : "تبخّر وتكثّف: البخار يمتص حرارة ليصعد، وعند ملامسة الغطاء البارد يطلق حرارة ويتكثّف لقطرات!",
+              ? "التلج بيمتص حرارة وبينصهر. الجزيئات بدأت تتحرك جنب بعض، وكل جزيء لسه H₂O."
+              : "الميّه بتمتص حرارة وهي بتتحوّل لبخار. عند الغطا البارد البخار بيفقد حرارة وبيتكثّف لقطرات.",
         holdLabel: canHeat ? "🔥 جارٍ التسخين..." : "🔥 اضغط مطوّلًا للتسخين",
         secondaryLabel: "❄️ تجميد سريع",
-        stepChime: em.stepChime,
+        lift: em.overall,
+      stepChime: em.stepChime,
         emerging: em.emerging,
       };
     }
 
-    const speed = (heating && ready) || doorWideOpen ? 0.34 : 0.19;
+    const speed = heating && ready ? 0.46 : doorWideOpen ? 0.24 : 0.16;
+    cyclePosition = (cyclePosition + dt * speed) % 1;
+    heatRoutes.visible = ready && showEnergy;
+    if (heatRoutes.visible) for (const {arrow, curve, offset} of indicators) {
+      const t = (cyclePosition + offset) % 1;
+      curve.getPointAt(t, arrow.position);
+      arrow.quaternion.setFromUnitVectors(up, curve.getTangentAt(t, tangent));
+    }
+    fridgeInteriorLight.intensity = doorWideOpen ? 0.017 : 0.002;
     doorPivot.rotation.y = THREE.MathUtils.lerp(doorPivot.rotation.y, doorWideOpen ? 1.88 : 0.18, 1 - Math.exp(-dt * 8));
     freonBeads.forEach((fb) => {
-      const u = (clock * speed + fb.offset) % 1;
+      const u = (cyclePosition + fb.offset) % 1;
       fb.mesh.position.copy(fullCycleCurve.getPointAt(u));
       fb.mesh.material.color.setHex(u < 0.32 ? 0x5ce8ff : u < 0.54 ? 0xffcb44 : 0xff5e2b);
     });
 
     badgeB.userData.setText(
-      doorWideOpen ? "اسحب المجسم ٣٦٠° لترى الموتور وشبكة التكثّف النحاسية بالخلف!" : "أغلقنا الباب لحفظ البرودة واستقرار دورة التبريد!",
+      showEnergy ? "المبخّر يمتصّ حرارة • المكثّف يطردها" : doorWideOpen ? "الباب مفتوح" : "الباب مقفول",
       "#ffcb44"
     );
 
     return {
       progress: em.emerging ? em.overall : (doorWideOpen ? 1 : 0.65),
+      sound: ready ? "motor" : "", soundLevel: heating || doorWideOpen ? 0.85 : 0.32,
+      event: doorWideOpen ? "door-open" : "door-closed",
       badge: "ص ٣ • دورة التلاجة",
       subTabs: ["١. تحوّلات الماء الستة", "٢. دورة التبريد بالثلاجة"],
       subIndex: 1,
       buildPill: em.buildPill,
       stateText: em.emerging
         ? em.caption
-        : "١) التمدّد والتبخّر بالفريزر (أزرق — يمتص حرارة الأكل) ← ٢) الضغط بالموتور ← ٣) التكثّف بالشبكة الخلفية (أحمر — يطرد الحرارة للمطبخ).",
+        : showEnergy ? "اتبع الأسهم. جوّه التلاجة الحرارة بتنتقل من الأكل للمبخّر، وبرّه التلاجة المكثّف بيسلّمها لهوا المطبخ." : "١) التمدّد والتبخّر بالفريزر (أزرق — يمتص حرارة الأكل) ← ٢) الضغط بالموتور ← ٣) التكثّف بالشبكة الخلفية (أحمر — يطرد الحرارة للمطبخ).",
       holdLabel: "⚡ تسريع دورة الفريون",
+      showTertiary: true, tertiaryLabel: showEnergy ? "اخفِ مسار الحرارة" : "تتبّع انتقال الحرارة",
       secondaryLabel: doorWideOpen ? "🚪 أغلق باب التلاجة" : "🚪 افتح الباب بالكامل",
+      lift: em.overall,
       stepChime: em.stepChime,
       emerging: em.emerging,
     };
   }
 
-  return { root, interactables, update, setSubMode, triggerEmergence, cycleSecondary, reset: () => { heat = 0; triggerEmergence(); } };
+  return { root, interactables, update, setLift: emerge.setLift, setSubMode, triggerEmergence, cycleSecondary, tertiaryAction: toggleEnergy, reset: () => { heat = 0; triggerEmergence(); } };
 }
 
 /**
@@ -1065,7 +1098,9 @@ export function createStation1Calorimeter({ showBooklet = true } = {}) {
   });
   const solCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.144, 0.115, 0.19, 36), solMat);
   solCyl.position.y = 0.145;
-  part4Solution.add(solCyl);
+  const surface = createWaterSurface(0.143);
+  surface.mesh.position.y = 0.241;
+  part4Solution.add(solCyl, surface.mesh);
 
   const ions = Array.from({ length: 14 }, (_, k) => {
     const im = new THREE.Mesh(
@@ -1242,6 +1277,7 @@ export function createStation1Calorimeter({ showBooklet = true } = {}) {
       ion.mesh.position.set(Math.cos(a) * r, 0.08 + (idx % 5) * 0.026, Math.sin(a) * r);
     });
 
+    surface.animate(clock, active && prog < 1 ? 1 : 0.09);
     const s = salts[saltIdx];
     solMat.color.lerp(new THREE.Color(prog > 0.2 ? s.waterCol : 0x38bdf8), 0.08);
     const level = 0.52 + prog * s.deltaScale;
@@ -1251,6 +1287,7 @@ export function createStation1Calorimeter({ showBooklet = true } = {}) {
 
     return {
       progress: em.emerging ? em.overall : prog,
+      sound: ready && active && prog < 1 ? "stir" : "", soundLevel: Math.sin(prog * Math.PI),
       badge: "ص ٥–٧ • المسعر والأملاح",
       subTabs: ["١. أملاح شائعة: NH₄NO₃ و NaOH", "٢. نفس الملح في صورتين: LiCl"],
       subIndex: saltIdx >= 2 ? 1 : 0,
@@ -1261,12 +1298,13 @@ export function createStation1Calorimeter({ showBooklet = true } = {}) {
       holdLabel: prog >= 0.98 ? "✓ اكتمل الذوبان" : "🥄 صبّ الملح وقلّب",
       secondaryLabel: "⇄ بدّل الملح",
       showTertiary: prog > 0.05,
+      lift: em.overall,
       stepChime: em.stepChime,
       emerging: em.emerging,
     };
   }
 
-  return { root, interactables, update, setSubMode, triggerEmergence, cycleSecondary, reset: () => { prog = 0; active = false; triggerEmergence(); } };
+  return { root, interactables, update, setLift: emerge.setLift, setSubMode, triggerEmergence, cycleSecondary, primaryAction: () => { active = true; }, reset: () => { prog = 0; active = false; triggerEmergence(); } };
 }
 
 /**
@@ -1488,6 +1526,7 @@ export function createStation2Crystals({ showBooklet = true } = {}) {
 
     return {
       progress: em.emerging ? em.overall : dehydration,
+      sound: canHeat ? "burner" : "", soundLevel: dehydration, event: rehydrating ? "drop" : "",
       badge: "ص ٨ • البلّورات المتهدرتة",
       subTabs: ["١. كبريتات النحاس (أزرق ⇄ أبيض)", "٢. كلوريد الكوبلت (وردي ⇄ أزرق)"],
       subIndex: crystalKind,
@@ -1498,12 +1537,13 @@ export function createStation2Crystals({ showBooklet = true } = {}) {
       holdLabel: canHeat ? "🔥 جارٍ نزع ماء التبلور (ماص)..." : "🔥 اضغط مطوّلًا لتسخين البلّورة",
       secondaryLabel: dehydration > 0.1 ? "💧 أضف قطرات ماء (طارد)" : "⇄ بدّل نوع البلّورة",
       showTertiary: false,
+      lift: em.overall,
       stepChime: em.stepChime,
       emerging: em.emerging,
     };
   }
 
-  return { root, interactables, update, setSubMode, triggerEmergence, cycleSecondary, reset: () => { dehydration = 0; triggerEmergence(); } };
+  return { root, interactables, update, setLift: emerge.setLift, setSubMode, triggerEmergence, cycleSecondary, reset: () => { dehydration = 0; triggerEmergence(); } };
 }
 
 /**
@@ -1689,9 +1729,11 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
   partB6Trickle.add(trickle, warmGlowRing);
   subB.add(partB6Trickle);
 
+  let packCracked = false;
+  function crackPack() { if (subMode === 0) packCracked = true; }
   let subMode = 0, isHotPack = false, lastPaintedHot = false, prog = 0, clock = 0;
 
-  const hsPack = createTouchHotspot(new THREE.Vector3(0, 0.135, 0.06), () => { prog = Math.min(1, prog + 0.5); }, 0.12, 0xffcb44);
+  const hsPack = createTouchHotspot(new THREE.Vector3(0, 0.135, 0.06), crackPack, 0.12, 0xffcb44);
   subA.add(hsPack);
   hotspots.push(hsPack);
   interactables.push(hsPack.userData.hitMesh);
@@ -1726,12 +1768,13 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
     subA.visible = idx === 0;
     subB.visible = idx === 1;
     hsPack.visible = idx === 0;
+    packCracked = false;
     prog = 0;
     emerge.trigger(idx === 0 ? "sub0" : "sub1");
   }
 
   function cycleSecondary() {
-    if (subMode === 0) { isHotPack = !isHotPack; prog = 0; }
+    if (subMode === 0) { isHotPack = !isHotPack; packCracked = false; prog = 0; }
     else { prog = 0; }
   }
 
@@ -1740,7 +1783,8 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
     const em = emerge.update(dt);
     const ready = !em.emerging;
     hotspots.forEach((h) => { if (h.visible && ready) h.userData.pulse(clock); });
-    if (heating && ready) prog = Math.min(1, prog + dt * 0.42);
+    if (heating && ready) crackPack();
+    if (ready && (subMode === 0 ? packCracked : heating)) prog = Math.min(1, prog + dt * 0.42);
 
     if (subMode === 0) {
       if (isHotPack !== lastPaintedHot) {
@@ -1771,6 +1815,7 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
 
       return {
         progress: em.emerging ? em.overall : prog,
+        event: prog > 0 ? "pack" : "",
         badge: "ص ١١ • الكمّادات الفورية",
         subTabs: ["١. الكمّادة الباردة والساخنة", "٢. أمان تخفيف الحمض المركّز"],
         subIndex: 0,
@@ -1783,7 +1828,8 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
         holdLabel: prog >= 0.95 ? "✓ تفاعلت الكمّادة الفورية" : "👋 اضغط لكسر جيب الماء",
         secondaryLabel: isHotPack ? "❄️ للكمّادة الباردة" : "🔥 للكمّادة الساخنة",
         showTertiary: prog > 0.1,
-        stepChime: em.stepChime,
+        lift: em.overall,
+      stepChime: em.stepChime,
         emerging: em.emerging,
       };
     }
@@ -1796,6 +1842,7 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
 
     return {
       progress: em.emerging ? em.overall : prog,
+      sound: pouring ? "water" : "", soundLevel: 0.42,
       badge: "ص ١١ • أمان التخفيف",
       subTabs: ["١. الكمّادة الباردة والساخنة", "٢. أمان تخفيف الحمض المركّز"],
       subIndex: 1,
@@ -1806,10 +1853,11 @@ export function createStation3PacksAndSafety({ showBooklet = true } = {}) {
       holdLabel: "🧪 نقّط الحمض على الجدار ببطء",
       secondaryLabel: "↺ إعادة التجربة",
       showTertiary: false,
+      lift: em.overall,
       stepChime: em.stepChime,
       emerging: em.emerging,
     };
   }
 
-  return { root, interactables, update, setSubMode, triggerEmergence, cycleSecondary, reset: () => { prog = 0; triggerEmergence(); } };
+  return { root, interactables, update, setLift: emerge.setLift, setSubMode, triggerEmergence, cycleSecondary, primaryAction: crackPack, reset: () => { packCracked = false; prog = 0; triggerEmergence(); } };
 }
