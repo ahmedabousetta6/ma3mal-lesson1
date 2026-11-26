@@ -1,0 +1,2502 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>مذكرة مَعْمَل | الدرس الأول: الحرارة رايحة فين؟ (نسخة عيّنة • ٢٠ صفحة + واقع معزّز وافتراضي)</title>
+  <style>
+@font-face {
+  font-family: KDisplay;
+  src: url('./fonts/Cairo-Variable.ttf') format('truetype');
+  font-weight: 200 900;
+}
+@font-face {
+  font-family: KUI;
+  src: url('./fonts/ReadexPro-Variable.ttf') format('truetype');
+  font-weight: 200 700;
+}
+@font-face {
+  font-family: KBody;
+  src: url('./fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+@font-face {
+  font-family: KBody;
+  src: url('./fonts/IBMPlexSansArabic-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+@page { size: A4 portrait; margin: 0; }
+
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body {
+  margin: 0; padding: 0;
+  background: #1a1230;
+  font-family: KBody, Tahoma, sans-serif;
+  color: #1b1336;
+  direction: rtl;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(255, 203, 68, 0.18) 0%, transparent 34%),
+    radial-gradient(circle at 8% 82%, rgba(125, 226, 209, 0.2) 0%, transparent 36%),
+    linear-gradient(180deg, #fff6e3 0%, #f3ecff 52%, #e6fbf7 100%);
+  position: relative;
+  overflow: hidden;
+  page-break-after: always;
+  break-after: page;
+  margin: 0 auto 9mm auto;
+  box-shadow: 0 12px 38px rgba(0,0,0,0.45);
+  display: flex;
+  flex-direction: column;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+
+@media print {
+  html, body { background: #fffdf8; }
+  .page { margin: 0; box-shadow: none; }
+  .screen-toolbar { display: none !important; }
+}
+
+/* ============================================================================
+ * DIAGONAL PUBLISHER SAMPLE WATERMARK («عيّنة • مَعْمَل»)
+ * ============================================================================ */
+.wm-layer {
+  position: absolute; inset: 0; z-index: 45; pointer-events: none; overflow: hidden;
+}
+.wm-stamp {
+  position: absolute;
+  font-family: KDisplay, sans-serif;
+  font-weight: 900;
+  color: rgba(45, 20, 90, 0.085);
+  border: 1.2mm dashed rgba(45, 20, 90, 0.095);
+  border-radius: 5mm;
+  padding: 1.5mm 8mm;
+  transform: rotate(-28deg);
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.wm-center {
+  top: 46%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-28deg);
+  font-size: 54pt;
+}
+.wm-top {
+  top: 17%; left: 12%;
+  font-size: 24pt;
+  border-width: 0.7mm;
+}
+.wm-bot {
+  bottom: 16%; right: 10%;
+  font-size: 24pt;
+  border-width: 0.7mm;
+}
+.cover-page .wm-center {
+  color: rgba(255, 203, 68, 0.16);
+  border-color: rgba(255, 203, 68, 0.2);
+}
+
+/* Browser Preview Toolbar */
+.screen-toolbar {
+  position: sticky; top: 0; z-index: 99;
+  background: rgba(25, 16, 48, 0.96);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 10px 22px;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  border-bottom: 3px solid #ffcb44;
+  font-family: KUI, sans-serif;
+}
+.tb-brand { display: flex; align-items: center; gap: 10px; font-family: KDisplay, sans-serif; font-weight: 900; font-size: 16px; color: #ffcb44; }
+.tb-brand span { color: #fff; font-weight: 700; font-size: 13.5px; }
+.tb-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.screen-toolbar a {
+  background: #ffcb44; color: #1b1336; border: 2px solid #1b1336;
+  border-radius: 99px; padding: 6px 14px; font-family: KUI, sans-serif;
+  font-weight: 700; font-size: 12.5px; text-decoration: none;
+  box-shadow: 0 2px 0 #1b1336;
+}
+.screen-toolbar a.mint-btn { background: #7de2d1; }
+.screen-toolbar a.ghost-btn { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.3); box-shadow: none; }
+
+/* Interior Page Header Chrome (Tight 5.5mm side margins!) */
+.pg-head {
+  background: linear-gradient(135deg, #21143b 0%, #3b1e6d 100%);
+  padding: 2.3mm 5.8mm 2.9mm 5.8mm;
+  border-bottom: 1.2mm solid #ffcb44;
+}
+.pg-head.mode-qbank { background: linear-gradient(135deg, #102a49 0%, #1d4b7a 100%); border-bottom-color: #4cc9f0; }
+.pg-head.mode-key { background: linear-gradient(135deg, #331545 0%, #581f6e 100%); border-bottom-color: #fd7391; }
+
+.pg-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4mm; }
+.pg-topbar-right { display: flex; align-items: center; gap: 1.8mm; }
+.pg-chip-num {
+  background: #ffcb44; color: #1b1336;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 11pt;
+  padding: 0.2mm 3.2mm; border-radius: 99px; border: 0.5mm solid #1b1336;
+}
+.pill-cat {
+  background: #ff6b8b; color: #1b1336;
+  font-family: KUI, sans-serif; font-weight: 700; font-size: 9.8pt;
+  padding: 0.5mm 3.8mm; border-radius: 99px; border: 0.5mm solid #1b1336;
+}
+.mode-qbank .pill-cat { background: #5ce1e6; }
+.mode-key .pill-cat { background: #ffcb44; }
+.sample-pill {
+  background: #fff0ad; color: #8c2d00;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 9pt;
+  padding: 0.3mm 2.8mm; border-radius: 99px; border: 0.45mm dashed #b85d00;
+}
+
+.brand-badge {
+  background: rgba(255, 255, 255, 0.14); color: #ffe596;
+  font-family: KUI, sans-serif; font-weight: 700; font-size: 9pt;
+  padding: 0.5mm 3.6mm; border-radius: 99px; border: 0.4mm solid rgba(255, 203, 68, 0.65);
+}
+.hero-title-band {
+  background: linear-gradient(98deg, #ffe999 0%, #ffd2b8 50%, #ffc2d4 100%);
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.2mm;
+  padding: 1.6mm 4.2mm;
+  box-shadow: 0 0.85mm 0 #1b1336;
+}
+.mode-qbank .hero-title-band { background: linear-gradient(98deg, #c2f9ef 0%, #c8e7ff 100%); }
+.mode-key .hero-title-band { background: linear-gradient(98deg, #ffeaa7 0%, #f3d5ff 100%); }
+
+.st-sub { font-family: KUI, sans-serif; font-size: 8.8pt; font-weight: 700; color: #3d2566; }
+.hero-title-band h1 {
+  margin: 0.1mm 0 0;
+  font-family: KDisplay, sans-serif;
+  font-weight: 900;
+  font-size: 18.8pt;
+  color: #1b1336;
+  line-height: 1.15;
+}
+
+.unit-tab {
+  position: absolute; right: 0; top: 48mm;
+  width: 5mm; height: 24mm;
+  background: #ffcb44; color: #1b1336;
+  border: 0.55mm solid #1b1336; border-right: 0;
+  border-radius: 2mm 0 0 2mm;
+  display: flex; align-items: center; justify-content: center;
+}
+.unit-tab.mode-qbank { background: #5ce1e6; }
+.unit-tab.mode-key { background: #ff6b8b; }
+.unit-tab span {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: KUI, sans-serif; font-weight: 700; font-size: 7.6pt;
+}
+
+/* TIGHT ZERO-GAP FULL-HEIGHT FLEX BODY! */
+.pg-body {
+  flex: 1;
+  padding: 2mm 5.8mm 9.6mm 5.8mm;
+  display: flex;
+  flex-direction: column;
+  gap: 1.9mm;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2.2mm; }
+.grid-2.grow-grid { flex: 1; align-items: stretch; }
+.grid-4-cells { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8mm; flex: 1; }
+.grid-3-cells { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.8mm; flex: 1; }
+
+.pg-foot {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 8mm;
+  padding: 0 5.8mm;
+  background: #21143b;
+  border-top: 0.65mm solid #ffcb44;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 8.6pt; color: #f0eaff;
+  font-family: KUI, sans-serif;
+}
+.pg-foot-right { display: flex; align-items: center; gap: 2.5mm; }
+.pg-num {
+  background: #ffcb44; color: #1b1336;
+  font-weight: 700; font-size: 8.5pt;
+  padding: 0.25mm 3mm; border-radius: 99px;
+}
+.pg-foot-brand { font-family: KDisplay, sans-serif; font-weight: 900; color: #7de2d1; font-size: 9.5pt; }
+
+/* ============================================================================
+ * COLORFUL MODULES, MIND-MAPS & FLUSH-HEADER «تدريب» BOXES (ZERO DEAD PADDING!)
+ * ============================================================================ */
+.q-opener {
+  background: linear-gradient(90deg, #ffe58f 0%, #fff4cc 100%);
+  border: 0.65mm solid #1b1336;
+  border-right: 3mm solid #e85d04;
+  border-radius: 3.2mm;
+  padding: 1.8mm 3.6mm;
+  font-size: 11.5pt;
+  font-weight: 700;
+  line-height: 1.38;
+  box-shadow: 0 0.75mm 0 #1b1336;
+}
+.q-opener b { font-family: KDisplay, sans-serif; font-weight: 900; color: #9a2b15; font-size: 12.2pt; }
+
+.mmap-tree {
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.6mm;
+  padding: 2.1mm 3mm;
+  background: #ffffff;
+  box-shadow: 0 0.85mm 0 #1b1336;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.6mm;
+}
+.mmap-tree.endo { background: linear-gradient(180deg, #ffd8cc 0%, #fff2ed 100%); }
+.mmap-tree.exo { background: linear-gradient(180deg, #c7f9ee 0%, #edfffb 100%); }
+.mmap-tree.lav { background: linear-gradient(180deg, #e5d4ff 0%, #f7f2ff 100%); }
+.mmap-tree.butter { background: linear-gradient(180deg, #ffea9f 0%, #fff9df 100%); }
+
+.mmap-hub {
+  background: #21143b; color: #ffcb44;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 13pt;
+  padding: 1.1mm 3mm; border-radius: 2.4mm;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.mmap-tree.endo .mmap-hub { background: #b82518; color: #fff6e5; }
+.mmap-tree.exo .mmap-hub { background: #0c635c; color: #e6fff9; }
+.mmap-hub-sub { font-family: KUI, sans-serif; font-size: 9pt; font-weight: 700; background: rgba(255,255,255,0.22); padding: 0.25mm 2.2mm; border-radius: 99px; color: #fff; }
+
+.mmap-branches {
+  display: flex; flex-direction: column; justify-content: space-around; gap: 1.4mm;
+  padding-right: 2.6mm;
+  border-right: 0.85mm solid #21143b;
+  flex: 1;
+}
+.mmap-node {
+  background: rgba(255, 255, 255, 0.95);
+  border: 0.5mm solid #1b1336;
+  border-radius: 2.4mm;
+  padding: 1.4mm 2.6mm;
+  font-size: 11.4pt;
+  font-weight: 700;
+  line-height: 1.36;
+  position: relative;
+}
+.mmap-node::before {
+  content: "";
+  position: absolute; right: -3mm; top: 50%;
+  width: 2.5mm; height: 0.8mm; background: #1b1336;
+}
+.mmap-node b { font-family: KDisplay, sans-serif; font-weight: 900; font-size: 11.8pt; color: #1b1336; }
+
+/* Horizontal 3-Stage Process Flow */
+.flow-3 {
+  display: grid;
+  grid-template-columns: 1fr 5mm 1fr 5mm 1fr;
+  align-items: stretch;
+  gap: 0;
+}
+.flow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 16pt; color: #b82518;
+}
+.flow-card {
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.2mm;
+  padding: 2mm 2.6mm;
+  box-shadow: 0 0.85mm 0 #1b1336;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 0.9mm;
+  font-size: 11pt; font-weight: 700; line-height: 1.36;
+}
+.flow-card.c1 { background: linear-gradient(180deg, #cdeffd 0%, #eefaff 100%); }
+.flow-card.c2 { background: linear-gradient(180deg, #ffe89e 0%, #fff9e2 100%); }
+.flow-card.c3 { background: linear-gradient(180deg, #ffd4c4 0%, #fff2ed 100%); }
+.flow-step-head {
+  display: flex; justify-content: space-between; align-items: center; gap: 1.5mm;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 12.2pt; color: #1b1336;
+}
+.step-pill {
+  background: #21143b; color: #ffcb44;
+  font-family: KUI, sans-serif; font-size: 8.4pt; font-weight: 700;
+  padding: 0.25mm 2.2mm; border-radius: 99px;
+}
+
+.vs-board { display: grid; grid-template-columns: 1fr 9.5mm 1fr; align-items: stretch; gap: 0; }
+.vs-badge-col { display: flex; align-items: center; justify-content: center; }
+.vs-circle {
+  width: 9mm; height: 9mm; border-radius: 50%;
+  background: #ffcb44; color: #1b1336; border: 0.65mm solid #1b1336;
+  display: flex; align-items: center; justify-content: center;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 9.8pt;
+  box-shadow: 0 0.75mm 0 #1b1336;
+}
+
+.spot-svg { flex-shrink: 0; display: block; align-self: center; }
+.card-with-illo { display: flex; align-items: stretch; gap: 2.4mm; flex: 1; }
+
+.chain-row { display: flex; align-items: center; gap: 1.5mm; flex-wrap: wrap; }
+.chain-chip {
+  background: #ffffff; border: 0.5mm solid #1b1336; border-radius: 2.2mm;
+  padding: 1mm 2.4mm; font-size: 10.8pt; font-weight: 700; line-height: 1.34;
+}
+.chain-chip.accent-red { background: #ffd6cf; color: #8c190e; border-color: #b82518; }
+.chain-chip.accent-mint { background: #c4f7ee; color: #0a4f4a; border-color: #0f6e67; }
+.chain-chip.accent-gold { background: #ffe899; color: #523500; border-color: #b8860b; }
+.chain-arr { font-weight: 900; color: #b82518; font-size: 13pt; }
+
+mark.hl {
+  background: #ffe066;
+  border-bottom: 0.4mm solid #d97706;
+  border-radius: 1.2mm;
+  color: #1b1336;
+  padding: 0 1.2mm;
+  font-weight: 700;
+}
+
+.char-tip {
+  display: flex; align-items: center; gap: 2.8mm;
+  background: linear-gradient(90deg, #d8f3ff 0%, #f0faff 100%);
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.4mm; padding: 1.9mm 3.2mm;
+  font-size: 11pt; font-weight: 700; line-height: 1.4;
+  box-shadow: 0 0.8mm 0 #1b1336;
+}
+.char-tip.younes { background: linear-gradient(90deg, #ffe8a3 0%, #fff8df 100%); }
+.char-tip img {
+  width: 13.5mm; height: 13.5mm; border-radius: 50%;
+  object-fit: cover; border: 0.65mm solid #1b1336; flex-shrink: 0; background: #fff;
+}
+.char-name { font-family: KDisplay, sans-serif; font-weight: 900; color: #21143b; font-size: 11.8pt; }
+
+/* FLUSH-HEADER «تدريب» BOX — ZERO BLANK FOREHEAD OR DEAD SPACE! */
+.train-box {
+  background: #ffffff;
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.6mm;
+  overflow: hidden;
+  box-shadow: 0 0.9mm 0 #1b1336;
+  display: flex;
+  flex-direction: column;
+}
+.train-box.grow-box { flex: 1; }
+.train-head {
+  background: linear-gradient(90deg, #ff4d79 0%, #ff85a1 100%);
+  color: #1b1336;
+  border-bottom: 0.55mm solid #1b1336;
+  padding: 1.3mm 3.4mm;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 12.2pt;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.train-tag {
+  background: #ffcb44; color: #1b1336; font-family: KUI, sans-serif; font-size: 8.6pt; font-weight: 700;
+  padding: 0.25mm 2.8mm; border-radius: 99px; border: 0.45mm solid #1b1336;
+}
+.train-body {
+  padding: 2mm 3.4mm;
+  background: linear-gradient(180deg, #fff9fb 0%, #ffffff 100%);
+  font-size: 11.2pt; font-weight: 700; line-height: 1.44;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: space-around; gap: 1.4mm;
+}
+.train-cell {
+  background: #f8f5ff;
+  border: 0.5mm solid #b8a8dc;
+  border-radius: 2.4mm;
+  padding: 1.5mm 2.6mm;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 1mm;
+}
+.train-cell b { color: #21143b; font-family: KDisplay, sans-serif; font-weight: 900; }
+
+.ans-pad {
+  background: #faf7ff;
+  border: 0.45mm solid #c9bde6;
+  border-radius: 2.2mm;
+  padding: 0.6mm 2.6mm 1.2mm 2.6mm;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: space-evenly;
+}
+.pad-line {
+  min-height: 5.6mm;
+  border-bottom: 0.45mm dashed #7c6ca8;
+}
+
+.plate-img {
+  width: 100%; max-height: 86mm; object-fit: contain;
+  display: block; border-radius: 3.2mm; margin: 0 auto;
+}
+.vec-svg { width: 100%; height: auto; display: block; }
+
+/* VIP Hologram AR/VR Gateway Ticket */
+.ar-gateway {
+  position: relative; z-index: 50;
+  background: linear-gradient(115deg, #1b1136 0%, #381d6e 58%, #0f4c75 100%);
+  color: #ffffff;
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.4mm;
+  padding: 1.8mm 3.2mm;
+  display: flex; align-items: center; gap: 3.2mm;
+  box-shadow: 0 0.85mm 0 #1b1336;
+}
+.qr-box {
+  width: 18mm; background: #fff;
+  padding: 0.9mm 0.9mm 0.4mm 0.9mm; border-radius: 2mm; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; text-decoration: none;
+  border: 0.5mm solid #ffcb44;
+}
+.qr-box img { width: 15.6mm; height: 15.6mm; display: block; }
+.qr-box span { font-family: KUI, sans-serif; font-size: 6pt; font-weight: 700; color: #1b1336; margin-top: 0.2mm; }
+.ar-gw-eyebrow { font-family: KUI, sans-serif; font-size: 8.8pt; color: #7de2d1; font-weight: 700; }
+.ar-gw-title { font-family: KDisplay, sans-serif; font-size: 11.8pt; font-weight: 900; margin: 0.2mm 0; }
+.ar-gw-title a { color: #ffcb44; text-decoration: underline; }
+.ar-gw-sub { font-size: 9.2pt; color: #f0ebff; line-height: 1.32; }
+
+/* Scientific Tables */
+table.k-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 11pt; font-weight: 700; direction: rtl;
+  border: 0.65mm solid #1b1336; border-radius: 3.4mm; overflow: hidden;
+  box-shadow: 0 0.85mm 0 #1b1336;
+}
+table.k-table th {
+  background: #21143b; color: #ffcb44;
+  font-family: KUI, sans-serif; font-weight: 700; font-size: 10.6pt;
+  padding: 1.9mm 2.4mm; border-bottom: 0.55mm solid #1b1336; border-left: 0.45mm solid #3c2a63; text-align: center;
+}
+table.k-table th:last-child { border-left: 0; }
+table.k-table td {
+  background: #ffffff; padding: 1.85mm 2.4mm;
+  border-bottom: 0.45mm solid #cbbfe0; border-left: 0.45mm solid #cbbfe0; text-align: center;
+  line-height: 1.35;
+}
+table.k-table tr:nth-child(even) td { background: #f3ecff; }
+table.k-table tr:last-child td { border-bottom: 0; }
+table.k-table td:last-child { border-left: 0; }
+table.k-table tr.subhead td {
+  background: linear-gradient(90deg, #ffb703 0%, #ffd966 100%);
+  color: #1b1336;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 11.5pt;
+  border-top: 0.6mm solid #1b1336; border-bottom: 0.6mm solid #1b1336;
+}
+
+.chem { font-family: "Segoe UI", Tahoma, sans-serif; direction: ltr; unicode-bidi: isolate; display: inline-block; font-weight: 800; }
+.formula-hero {
+  font-family: "Segoe UI", Tahoma, sans-serif; direction: ltr; unicode-bidi: isolate;
+  background: #21143b; color: #ffcb44;
+  padding: 1.3mm 5mm; border-radius: 2.6mm; border: 0.6mm solid #ffcb44;
+  font-size: 16.5pt; font-weight: 900; text-align: center; display: inline-block;
+}
+.tag-exo { background: #ffd0c4; color: #8c190e; border: 0.4mm solid #b82518; border-radius: 99px; padding: 0.2mm 2.4mm; font-family: KUI, sans-serif; font-size: 9pt; font-weight: 700; }
+.tag-endo { background: #c2f7ee; color: #0a4f4a; border: 0.4mm solid #0f6e67; border-radius: 99px; padding: 0.2mm 2.4mm; font-family: KUI, sans-serif; font-size: 9pt; font-weight: 700; }
+
+/* FLUSH-STRUCTURED QUESTION BANK CARDS (ZERO INTERNAL WHITE GAPS!) */
+.q-card {
+  background: #ffffff;
+  border: 0.65mm solid #1b1336;
+  border-radius: 3.4mm;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0.85mm 0 #1b1336;
+}
+.q-top {
+  background: linear-gradient(90deg, #e3f2fd 0%, #f3ecff 100%);
+  border-bottom: 0.45mm solid #1b1336;
+  padding: 1.7mm 3.2mm;
+  display: flex; align-items: baseline; gap: 2mm;
+  font-size: 11.4pt; font-weight: 700; line-height: 1.38;
+}
+.q-card:nth-child(2) .q-top { background: linear-gradient(90deg, #ffe8a3 0%, #fff6d6 100%); }
+.q-card:nth-child(3) .q-top { background: linear-gradient(90deg, #c7f9ee 0%, #eafffa 100%); }
+.q-card:nth-child(4) .q-top { background: linear-gradient(90deg, #ffd6e0 0%, #fff0f4 100%); }
+
+.q-body {
+  padding: 1.8mm 3.2mm;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1.2mm;
+  background: #ffffff;
+}
+.q-num {
+  background: #162847; color: #ffcb44;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 10.8pt;
+  padding: 0.2mm 2.8mm; border-radius: 99px; flex-shrink: 0;
+}
+.q-type {
+  background: #ffffff; color: #1b1336;
+  font-family: KUI, sans-serif; font-size: 8.6pt; font-weight: 700;
+  padding: 0.2mm 2.4mm; border-radius: 99px; border: 0.45mm solid #1b1336; flex-shrink: 0;
+}
+.mcq-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm;
+  font-size: 10.6pt;
+}
+.mcq-opt {
+  background: #ffe8a3; border: 0.55mm solid #1b1336;
+  border-radius: 2.2mm; padding: 1.5mm 2mm; text-align: center; font-weight: 700;
+  box-shadow: 0 0.5mm 0 #1b1336;
+}
+.mcq-opt:nth-child(2) { background: #d0f4de; }
+.mcq-opt:nth-child(3) { background: #cdeffd; }
+.mcq-opt:nth-child(4) { background: #ffd6e0; }
+
+/* LUXURY COVER PAGE (Page 1 — «مَعْمَل») */
+.cover-page {
+  background:
+    radial-gradient(circle at 82% 14%, rgba(253, 115, 145, 0.28) 0%, transparent 36%),
+    radial-gradient(circle at 16% 20%, rgba(125, 226, 209, 0.25) 0%, transparent 36%),
+    linear-gradient(180deg, #1b1033 0%, #2b1854 55%, #fff5df 55%, #e8fbf8 100%);
+}
+.cover-top { padding: 5mm 7mm 2.8mm 7mm; color: #fff; text-align: center; }
+.cover-masthead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8mm; }
+.mast-logo {
+  background: #ffcb44; color: #1b1336;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 15pt;
+  padding: 0.7mm 5.2mm; border-radius: 99px; border: 0.65mm solid #1b1336;
+  box-shadow: 0 0.8mm 0 #1b1336;
+}
+.mast-tag {
+  background: rgba(125, 226, 209, 0.22); color: #7de2d1;
+  font-family: KUI, sans-serif; font-weight: 700; font-size: 9.8pt;
+  padding: 0.9mm 4.4mm; border-radius: 99px; border: 0.45mm solid #7de2d1;
+}
+.cover-title {
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 38pt; color: #ffcb44;
+  margin: 0.2mm 0 1.2mm; line-height: 1.08; text-shadow: 0 3px 0 #120a24;
+}
+.cover-official {
+  font-family: KUI, sans-serif; font-size: 12.2pt; font-weight: 700; color: #ffffff;
+  background: rgba(255,255,255,0.14); display: inline-block;
+  padding: 1.2mm 5.6mm; border-radius: 99px; border: 0.5mm solid #ffcb44;
+  margin-bottom: 2.6mm;
+}
+.cover-art-wrap { position: relative; width: 194mm; height: 85mm; margin: 0 auto; }
+.cover-art {
+  width: 100%; height: 100%; border-radius: 4.6mm; overflow: hidden;
+  border: 1.1mm solid #ffcb44; box-shadow: 0 3mm 8mm rgba(0,0,0,0.45);
+}
+.cover-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-floating-badge {
+  position: absolute; bottom: -3.2mm; left: 5mm;
+  background: #5ce1e6; color: #1b1336;
+  font-family: KUI, sans-serif; font-weight: 700; font-size: 9.4pt;
+  padding: 0.9mm 4.2mm; border-radius: 99px; border: 0.6mm solid #1b1336;
+  box-shadow: 0 0.8mm 0 #1b1336;
+}
+.cover-sample-ribbon {
+  position: absolute; top: 3.5mm; right: 3.5mm;
+  background: #ff4d79; color: #ffffff;
+  font-family: KDisplay, sans-serif; font-weight: 900; font-size: 11pt;
+  padding: 0.8mm 4.2mm; border-radius: 99px; border: 0.6mm solid #1b1336;
+  box-shadow: 0 0.8mm 0 #1b1336;
+}
+.cover-bottom {
+  padding: 4.5mm 7mm 9.8mm 7mm;
+  display: flex; flex-direction: column; gap: 2.2mm; flex: 1;
+}
+.roadmap-bar {
+  background: linear-gradient(90deg, #21143b 0%, #372063 100%);
+  color: #fff;
+  border: 0.65mm solid #1b1336; border-radius: 3.6mm;
+  padding: 2.2mm 3.2mm; box-shadow: 0 0.9mm 0 #1b1336;
+  flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+}
+.roadmap-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; margin-top: 1.2mm; flex: 1;
+}
+.rm-node {
+  border: 0.55mm solid #1b1336; border-radius: 2.6mm; padding: 1.8mm 2mm;
+  text-align: center; font-size: 10.3pt; line-height: 1.34; font-weight: 700; color: #1b1336;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.student-box {
+  background: linear-gradient(90deg, #ffdf78 0%, #fff3c4 100%);
+  border: 0.65mm solid #1b1336; border-radius: 3.4mm;
+  padding: 2.6mm 4.4mm; display: grid; grid-template-columns: 1.3fr 0.9fr; gap: 3.2mm;
+  font-family: KUI, sans-serif; font-size: 11pt; font-weight: 700;
+  box-shadow: 0 0.85mm 0 #1b1336;
+}
+
+/* Answer Key Styling */
+.ans-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2.1mm;
+  flex: 1; align-content: stretch;
+}
+.ans-item {
+  background: #ffffff; border: 0.6mm solid #1b1336; border-right: 2.6mm solid #3b1e6d;
+  border-radius: 2.8mm; padding: 1.9mm 2.8mm;
+  font-size: 10.2pt; font-weight: 700; line-height: 1.42;
+  box-shadow: 0 0.65mm 0 #1b1336;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.ans-item:nth-child(odd) { background: #fff9eb; border-right-color: #d97706; }
+.ans-item:nth-child(even) { background: #f2faff; border-right-color: #0e6ba8; }
+.ans-item b { color: #21143b; font-family: KDisplay, sans-serif; font-weight: 900; font-size: 10.8pt; }
+</style>
+</head>
+<body>
+  <div class="screen-toolbar">
+    <div class="tb-brand">⚗ مذكرة «مَعْمَل» التفاعلية <span>| الدرس الأول: الحرارة رايحة فين؟ (نسخة عيّنة للمدرّسين • ٢٠ صفحة A4)</span></div>
+    <div class="tb-actions">
+      <a class="ghost-btn" href="#p1">الغلاف</a>
+      <a class="ghost-btn" href="#p2">الخرائط والتدريبات</a>
+      <a class="ghost-btn" href="#p13">بنك الأسئلة</a>
+      <a class="ghost-btn" href="#p18">نموذج الإجابة</a>
+      <a class="mint-btn" href="./index.html">✦ افتح التجارب المجسّمة 3D</a>
+      <a href="./pdf/kashf-lesson1-magazine-20p.pdf" target="_blank">🖨 تحميل / طباعة عيّنة PDF</a>
+    </div>
+  </div>
+  
+    <section class="page cover-page" id="p1">
+      
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+      <div class="cover-top">
+        <div class="cover-masthead">
+          <span class="mast-logo">⚗ مَعْمَل • العدد الأول</span>
+          <span class="mast-tag">علوم الصف الثاني الإعدادي • الفصل الدراسي الثاني</span>
+        </div>
+        <div class="cover-title">الحرارة رايحة فين؟</div>
+        <div class="cover-official">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <div class="cover-art-wrap">
+          <div class="cover-art">
+            <img src="./img/cover-hero.jpg" alt="سلمى ويونس في مغامرة معمل العلمية">
+          </div>
+          <div class="cover-sample-ribbon">★ نسخة عيّنة للمدرّسين</div>
+          <div class="cover-floating-badge">✦ مزوّدة بتجارب واقع معزّز وافتراضي 3D تخرج من المذكرة قطعةً قطعة!</div>
+        </div>
+      </div>
+
+      <div class="cover-bottom">
+        <div class="mmap-tree lav" style="padding:2.2mm 3.2mm">
+          <div style="display:grid;grid-template-columns:46mm 1fr;gap:3mm;align-items:center">
+            <img src="./img/story-0.jpg" alt="زجاجة ماء باردة عليها قطرات ندى" style="width:46mm;height:35mm;object-fit:cover;border-radius:2.6mm;border:0.65mm solid #1b1336">
+            <div style="display:flex;flex-direction:column;gap:1.5mm">
+              <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:13pt;color:#21143b">✦ لقطة البداية: لغز الإزازة الساقعة وضهر التلاجة!</div>
+              <div class="char-tip" style="padding:1.5mm 2.6mm;box-shadow:none;font-size:10.6pt">
+                <img src="./img/salma.png" alt="سلمى" style="width:11.2mm;height:11.2mm">
+                <div><span class="char-name">سلمى:</span> مسحنا إزازة الميّه الساقعة بمنديل، وبعد دقيقة ظهرت عليها نقط ميّه من برّه! وضهر التلاجة دافي وجوّاها ساقع!</div>
+              </div>
+              <div class="char-tip younes" style="padding:1.5mm 2.6mm;box-shadow:none;font-size:10.6pt">
+                <img src="./img/younes.png" alt="يونس" style="width:11.2mm;height:11.2mm">
+                <div><span class="char-name">يونس:</span> السر كله في خريطة واحدة جوّه <b>«مَعْمَل»</b>: <mark class="hl">مين بيكتسب الحرارة ومين بيفقدها</mark> لمّا المادة تغيّر حالتها أو تدوب!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-bar">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:KDisplay,sans-serif;font-weight:900;font-size:12.6pt;color:#ffcb44">◈ خريطة مذكرة «مَعْمَل» (خرائط ذهنية + تدريبات فورية + تجارب 3D + ٢٠ سؤالًا)</span>
+            <span class="step-pill" style="background:#5ce1e6;color:#1b1336">٢٠ صفحة متكاملة</span>
+          </div>
+          <div class="roadmap-grid">
+            <div class="rm-node" style="background:#cdeffd">
+              <svg viewBox="0 0 56 56" width="46" height="46" style="margin:0 auto 1.4mm"><circle cx="28" cy="28" r="25" fill="#fff" stroke="#1b1336" stroke-width="2.2"/><rect x="16" y="13" width="24" height="30" rx="5" fill="#4cc9f0" stroke="#1b1336" stroke-width="2"/><line x1="16" y1="25" x2="40" y2="25" stroke="#1b1336" stroke-width="2"/></svg>
+              <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:10.8pt">١. تحوّلات الحالة والتلاجة</div>
+              <div style="font-size:9.2pt;color:#2c224d;margin:0.8mm 0">٣ أزواج عكسية + مراحل الفريون</div>
+              <span class="step-pill" style="background:#084c7d;color:#fff;align-self:center">ص ٢ – ٣ + تجربة 3D</span>
+            </div>
+            <div class="rm-node" style="background:#ffe89e">
+              <svg viewBox="0 0 56 56" width="46" height="46" style="margin:0 auto 1.4mm"><circle cx="28" cy="28" r="25" fill="#fff" stroke="#1b1336" stroke-width="2.2"/><path d="M17 20 L39 20 L36 42 L20 42 Z" fill="#ffb703" stroke="#1b1336" stroke-width="2"/><rect x="26" y="11" width="5" height="24" rx="2.5" fill="#e63946" stroke="#1b1336" stroke-width="1.6"/></svg>
+              <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:10.8pt">٢. حرارة الذوبان والمسعر</div>
+              <div style="font-size:9.2pt;color:#2c224d;margin:0.8mm 0">قانون ΔT + مصفوفة الأملاح</div>
+              <span class="step-pill" style="background:#8c2d00;color:#fff;align-self:center">ص ٤ – ٧ + تجربة 3D</span>
+            </div>
+            <div class="rm-node" style="background:#e5d4ff">
+              <svg viewBox="0 0 56 56" width="46" height="46" style="margin:0 auto 1.4mm"><circle cx="28" cy="28" r="25" fill="#fff" stroke="#1b1336" stroke-width="2.2"/><polygon points="28,12 42,24 36,42 20,42 14,24" fill="#0d74e8" stroke="#1b1336" stroke-width="2"/></svg>
+              <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:10.8pt">٣. البلّورات والرسم البياني</div>
+              <div style="font-size:9.2pt;color:#2c224d;margin:0.8mm 0">ماء التبلور + العلاقة الطردية</div>
+              <span class="step-pill" style="background:#4c1d95;color:#fff;align-self:center">ص ٨ – ١٠ + تجربة 3D</span>
+            </div>
+            <div class="rm-node" style="background:#c7f9ee">
+              <svg viewBox="0 0 56 56" width="46" height="46" style="margin:0 auto 1.4mm"><circle cx="28" cy="28" r="25" fill="#fff" stroke="#1b1336" stroke-width="2.2"/><rect x="14" y="18" width="28" height="20" rx="5" fill="#fd7391" stroke="#1b1336" stroke-width="2"/><path d="M24 28 L32 28 M28 24 L28 32" stroke="#fff" stroke-width="3"/></svg>
+              <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:10.8pt">٤. الكمّادات وبنك الأسئلة</div>
+              <div style="font-size:9.2pt;color:#2c224d;margin:0.8mm 0">٢٠ سؤالًا متنوعًا + نموذج الإجابة</div>
+              <span class="step-pill" style="background:#0a4f4a;color:#fff;align-self:center">ص ١١ – ٢٠ + تجربة 3D</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="student-box">
+          <div>◆ اسم الطالب / الطالبة: .....................................................</div>
+          <div>◆ الفصل / المجموعة: ............................</div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">نسخة عيّنة للمعلّم • سلسلة «مَعْمَل» للشرح الصفي والمذاكرة المنزلية</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page" id="p2">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٢</span>
+          <span class="pill-cat">خريطة ذهنية ١ • تحوّلات الحالة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>ستّ تحوّلات في ٣ أزواج عكسية.. والميّه هي هي!</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="q-opener">
+          <b>سؤال الانطلاق:</b> لمّا مكعّب التلج يسيح أو الميّه تغلي لبخار، هل جزيء الميّه <span class="chem">H₂O</span> بيتكسّر ولّا بيفضل زي ما هو؟
+        </div>
+
+        
+    <svg viewBox="0 0 760 218" direction="ltr" class="vec-svg" aria-label="أزواج تحولات الحالة الستة">
+      <defs>
+        <linearGradient id="gSolid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d8f3ff"/><stop offset="100%" stop-color="#9ee0ff"/>
+        </linearGradient>
+        <linearGradient id="gLiq" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c8faed"/><stop offset="100%" stop-color="#7ce8cf"/>
+        </linearGradient>
+        <linearGradient id="gGas" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffefc2"/><stop offset="100%" stop-color="#ffd075"/>
+        </linearGradient>
+        <marker id="arrRed" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#d92b1c"/>
+        </marker>
+        <marker id="arrBlue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#0b64a0"/>
+        </marker>
+      </defs>
+      <rect x="4" y="4" width="752" height="210" rx="18" fill="#ffffff" stroke="#1b1336" stroke-width="2.6"/>
+
+      <rect x="564" y="58" width="168" height="102" rx="16" fill="url(#gSolid)" stroke="#1b1336" stroke-width="2.5"/>
+      <text x="648" y="87" text-anchor="middle" font-family="KDisplay" font-size="17.5" font-weight="900" fill="#1b1336">&#x202B;الحالة الصلبة (ثلج)&#x202C;</text>
+      <g fill="#0e7cc4" stroke="#1b1336" stroke-width="1.6">
+        <circle cx="616" cy="117" r="8"/><circle cx="648" cy="117" r="8"/><circle cx="680" cy="117" r="8"/>
+        <circle cx="616" cy="140" r="8"/><circle cx="648" cy="140" r="8"/><circle cx="680" cy="140" r="8"/>
+      </g>
+
+      <rect x="296" y="58" width="168" height="102" rx="16" fill="url(#gLiq)" stroke="#1b1336" stroke-width="2.5"/>
+      <text x="380" y="87" text-anchor="middle" font-family="KDisplay" font-size="17.5" font-weight="900" fill="#1b1336">&#x202B;الحالة السائلة (ماء)&#x202C;</text>
+      <g fill="#0d8a7c" stroke="#1b1336" stroke-width="1.6">
+        <circle cx="344" cy="120" r="8"/><circle cx="372" cy="111" r="8"/><circle cx="400" cy="122" r="8"/>
+        <circle cx="358" cy="142" r="8"/><circle cx="388" cy="141" r="8"/><circle cx="416" cy="135" r="8"/>
+      </g>
+
+      <rect x="28" y="58" width="168" height="102" rx="16" fill="url(#gGas)" stroke="#1b1336" stroke-width="2.5"/>
+      <text x="112" y="87" text-anchor="middle" font-family="KDisplay" font-size="17.5" font-weight="900" fill="#1b1336">&#x202B;الحالة الغازية (بخار)&#x202C;</text>
+      <g fill="#e86f1c" stroke="#1b1336" stroke-width="1.6">
+        <circle cx="62" cy="112" r="8"/><circle cx="115" cy="108" r="8"/><circle cx="155" cy="122" r="8"/>
+        <circle cx="82" cy="142" r="8"/><circle cx="136" cy="143" r="8"/>
+      </g>
+
+      <line x1="558" y1="93" x2="470" y2="93" stroke="#d92b1c" stroke-width="3.6" marker-end="url(#arrRed)"/>
+      <text x="514" y="82" text-anchor="middle" font-family="KUI" font-size="14" font-weight="700" fill="#b82012">&#x202B;انصهار (ماص)&#x202C;</text>
+
+      <line x1="468" y1="129" x2="556" y2="129" stroke="#0b64a0" stroke-width="3.6" marker-end="url(#arrBlue)"/>
+      <text x="514" y="150" text-anchor="middle" font-family="KUI" font-size="14" font-weight="700" fill="#084c7d">&#x202B;تجمّد (طارد)&#x202C;</text>
+
+      <line x1="290" y1="93" x2="202" y2="93" stroke="#d92b1c" stroke-width="3.6" marker-end="url(#arrRed)"/>
+      <text x="246" y="82" text-anchor="middle" font-family="KUI" font-size="14" font-weight="700" fill="#b82012">&#x202B;تبخّر (ماص)&#x202C;</text>
+
+      <line x1="200" y1="129" x2="288" y2="129" stroke="#0b64a0" stroke-width="3.6" marker-end="url(#arrBlue)"/>
+      <text x="246" y="150" text-anchor="middle" font-family="KUI" font-size="14" font-weight="700" fill="#084c7d">&#x202B;تكثّف (طارد)&#x202C;</text>
+
+      <path d="M 642 54 Q 380 4 120 54" fill="none" stroke="#d92b1c" stroke-width="3" stroke-dasharray="7,4" marker-end="url(#arrRed)"/>
+      <rect x="280" y="11" width="200" height="27" rx="11" fill="#ffd8d4" stroke="#d92b1c" stroke-width="1.5"/>
+      <text x="380" y="29" text-anchor="middle" font-family="KUI" font-size="13.8" font-weight="700" fill="#9c190d">&#x202B;تسامٍ مباشر (ماص للحرارة)&#x202C;</text>
+
+      <path d="M 118 164 Q 380 212 640 164" fill="none" stroke="#0b64a0" stroke-width="3" stroke-dasharray="7,4" marker-end="url(#arrBlue)"/>
+      <rect x="262" y="178" width="236" height="27" rx="11" fill="#d0ecff" stroke="#0b64a0" stroke-width="1.5"/>
+      <text x="380" y="196" text-anchor="middle" font-family="KUI" font-size="13.8" font-weight="700" fill="#084c7d">&#x202B;ترسّب «تساقط» مباشر (طارد)&#x202C;</text>
+    </svg>
+    
+
+        <div class="grid-2 grow-grid">
+          <div class="mmap-tree endo">
+            <div class="mmap-hub"><span>▲ فرع ١: عمليات ماصّة للحرارة</span><span class="mmap-hub-sub">تكتسب طاقة ⟵ تتباعد</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>١. الانصهار:</b> صلب ⟵ سائل (مثل انصهار الجليد).</div>
+              <div class="mmap-node"><b>٢. التبخّر:</b> سائل ⟵ غاز (مثل تبخّر الماء والكحول).</div>
+              <div class="mmap-node"><b>٣. التسامي:</b> صلب ⟵ غاز مباشرةً (مثل <mark class="hl">تسامي اليود الصلب</mark> والثلج الجاف <span class="chem">CO₂(s)</span>).</div>
+            </div>
+          </div>
+
+          <div class="mmap-tree exo">
+            <div class="mmap-hub"><span>▼ فرع ٢: عمليات طاردة للحرارة</span><span class="mmap-hub-sub">تفقد طاقة ⟵ تتقارب</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>١. التجمّد:</b> سائل ⟵ صلب (عكس الانصهار).</div>
+              <div class="mmap-node"><b>٢. التكثّف:</b> غاز ⟵ سائل (مثل الندى و<mark class="hl">تكثّف أبخرة البروم</mark>).</div>
+              <div class="mmap-node"><b>٣. الترسّب «التساقط»:</b> غاز ⟵ صلب مباشرةً (مثل تكوّن الصقيع، عكس التسامي).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="char-tip">
+          <img src="./img/salma.png" alt="سلمى">
+          <div style="flex:1">
+            <div class="char-name" style="margin-bottom:0.8mm">مفتاح سلمى الذهني لتحوّلات الحالة (ثابت VS متغيّر):</div>
+            <div class="chain-row">
+              <span class="chain-chip accent-mint">✓ ثابت لا ينكسر: الروابط التساهمية داخل جزيء <span class="chem">H₂O</span></span>
+              <span class="chain-chip accent-gold">⇄ يتغيّر فقط: المسافات البينية وقوى التجاذب</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="train-box">
+          <div class="train-head"><span>✎ تدريب ١ (طبّق مباشرةً من الخريطة الذهنية)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>١) اختفاء مكعّب ثلج جاف في الهواء دون سائل: العملية ......................... وهي (ماصّة / طاردة) ...............</div>
+            <div>٢) تكوّن قطرات ماء خارج زجاجة باردة: العملية ......................... ومصدر القطرات ...............................</div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٢ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٣</span>
+          <span class="pill-cat">مخطط تدفّق • دورة التلاجة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>إزاي التلاجة بتسحب السخونة من الأكل وتطردها برّه؟</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="q-opener">
+          <b>الفكرة في جملة:</b> التلاجة ما بتصنعش برودة؛ دي <mark class="hl">بتنقل الحرارة من الأكل جوّه لهوا المطبخ برّه</mark> في دورة مغلقة ومتكررة!
+        </div>
+
+        <img class="plate-img" src="./targets/ar-plate-fridge.png" alt="مخطط مراحل دورة التبريد الثلاث في الثلاجة">
+
+        <div class="flow-3" style="flex:1">
+          <div class="flow-card c1">
+            <div class="flow-step-head"><span>١. التمدّد والتبخّر</span><span class="tag-endo">ماص</span></div>
+            <div><b>المكان:</b> مواسير الفريزر عبر صمام ضيق.</div>
+            <div><b>ماذا يحدث؟</b> يتبخّر السائل لغاز بارد <b>يسحب حرارة الأطعمة</b>.</div>
+          </div>
+          <div class="flow-arrow">⟵</div>
+          <div class="flow-card c2">
+            <div class="flow-step-head"><span>٢. الضغط</span><span class="step-pill">الموتور</span></div>
+            <div><b>المكان:</b> الضاغط (موتور التلاجة بالأسفل).</div>
+            <div><b>ماذا يحدث؟</b> يسحب بخار الفريون ويضغطه فترتفع حرارته وضغطه.</div>
+          </div>
+          <div class="flow-arrow">⟵</div>
+          <div class="flow-card c3">
+            <div class="flow-step-head"><span>٣. التكثّف</span><span class="tag-exo">طارد</span></div>
+            <div><b>المكان:</b> شبكة الأنابيب الخلفية.</div>
+            <div><b>ماذا يحدث؟</b> يتكثّف البخار لسائل <b>ويطرد الحرارة لهواء المطبخ</b>.</div>
+          </div>
+        </div>
+
+        <div class="train-box">
+          <div class="train-head"><span>✎ تدريب ٢ (حدّد على الرسم واستنتج)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>١) ضع دائرة على جزء <b>امتصاص الحرارة</b> على الرسم أعلاه، ومربّعًا حول جزء <b>طرد الحرارة</b> للغرفة.</div>
+            <div>٢) توقّع مع يونس: ماذا يحدث لحرارة المطبخ لو تركنا باب الثلاجة مفتوحًا لفترة طويلة؟ ...................................................</div>
+          </div>
+        </div>
+
+        
+    <div class="ar-gateway">
+      <a class="qr-box" href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=phase" target="_blank" rel="noopener" title="افتح التجربة التفاعلية ثلاثية الأبعاد">
+        <img src="./targets/qr-phase.png" alt="كود المعمل التفاعلي">
+        <span>امسح أو اضغط</span>
+      </a>
+      <div class="ar-gw-body">
+        <div class="ar-gw-eyebrow">✦ بوابة «مَعْمَل» المجسّمة (WebAR + 360° VR) • التجربة بتطلع من المذكرة قطعةً قطعة!</div>
+        <div class="ar-gw-title"><a href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=phase" target="_blank" rel="noopener">تجربة مَعْمَل المجسّمة: تحوّلات الماء والثلاجة ثلاثية الأبعاد ← افتح التجربة مباشرة</a></div>
+        <div class="ar-gw-sub">شاهد الثلاجة تخرج قطعةً قطعة من الرسمة وتتبّع سريان الفريون — وجّه كاميرا الموبايل للرسمة أعلاه لتخرج التجربة ثلاثية الأبعاد من الورقة!</div>
+      </div>
+    </div>
+    
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٣ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٤</span>
+          <span class="pill-cat">خريطة مقارنة مصوّرة • حرارة الذوبان</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>دوبان يسخّن ودوبان يبرّد.. ومين النظام ومين الوسط؟</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="vs-board" style="flex:1">
+          <div class="mmap-tree endo">
+            <div class="mmap-hub"><span>▲ الذوبان الطارد للحرارة</span><span class="mmap-hub-sub">يسخّن +</span></div>
+            <div class="card-with-illo">
+              
+    <svg viewBox="0 0 92 92" width="60" height="60" class="spot-svg" aria-hidden="true">
+      <circle cx="46" cy="46" r="42" fill="#ffe0d4" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M26 30 L66 30 L61 74 Q60 78 55 78 L37 78 Q32 78 31 74 Z" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M29 48 L63 48 L60 73 L32 73 Z" fill="#ff7b54"/>
+      <rect x="50" y="14" width="7" height="48" rx="3.5" fill="#fff" stroke="#1b1336" stroke-width="2"/>
+      <rect x="52" y="22" width="3" height="38" fill="#e63946"/>
+      <circle cx="53.5" cy="62" r="5.5" fill="#e63946" stroke="#1b1336" stroke-width="2"/>
+      <path d="M16 42 L8 36 M16 56 L7 58 M76 42 L84 36 M76 56 L85 58" stroke="#d93829" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    
+              <div class="mmap-branches">
+                <div class="mmap-node"><b>الطاقة:</b> تنطلق من النظام ⟵ للوسط.</div>
+                <div class="mmap-node"><b>الترمومتر:</b> ترتفع الحرارة (<span class="chem">T₂ &gt; T₁</span>).</div>
+                <div class="mmap-node"><b>مثال:</b> <b>مسحوق الغسيل</b> و<span class="chem">NaOH</span>.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vs-badge-col"><div class="vs-circle">VS</div></div>
+
+          <div class="mmap-tree exo">
+            <div class="mmap-hub"><span>▼ الذوبان الماص للحرارة</span><span class="mmap-hub-sub">يبرّد −</span></div>
+            <div class="card-with-illo">
+              
+    <svg viewBox="0 0 92 92" width="60" height="60" class="spot-svg" aria-hidden="true">
+      <circle cx="46" cy="46" r="42" fill="#d4f5ff" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M26 30 L66 30 L61 74 Q60 78 55 78 L37 78 Q32 78 31 74 Z" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M29 48 L63 48 L60 73 L32 73 Z" fill="#4cc9f0"/>
+      <rect x="50" y="14" width="7" height="48" rx="3.5" fill="#fff" stroke="#1b1336" stroke-width="2"/>
+      <rect x="52" y="42" width="3" height="18" fill="#0077b6"/>
+      <circle cx="53.5" cy="62" r="5.5" fill="#0077b6" stroke="#1b1336" stroke-width="2"/>
+      <path d="M10 38 L21 44 M10 58 L21 54 M82 38 L71 44 M82 58 L71 54" stroke="#0077b6" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    
+              <div class="mmap-branches">
+                <div class="mmap-node"><b>الطاقة:</b> تُمتص من الوسط ⟵ للنظام.</div>
+                <div class="mmap-node"><b>الترمومتر:</b> تنخفض الحرارة (<span class="chem">T₂ &lt; T₁</span>).</div>
+                <div class="mmap-node"><b>مثال:</b> <span class="chem">NH₄NO₃</span> (كبرودة تبخّر الكحول).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+    <svg viewBox="0 0 760 176" direction="ltr" class="vec-svg" aria-label="مخطط النظام والوسط المحيط">
+      <rect x="4" y="4" width="752" height="168" rx="18" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+
+      <rect x="382" y="14" width="360" height="148" rx="22" fill="#ffefc2" stroke="#d97706" stroke-width="2.5" stroke-dasharray="7,4"/>
+      <text x="562" y="39" text-anchor="middle" font-family="KDisplay" font-size="14" font-weight="900" fill="#7c3a00">&#x202B;الوسط المحيط: الكوب + الترمومتر + الهواء + يدك&#x202C;</text>
+
+      <rect x="434" y="52" width="256" height="96" rx="16" fill="#21143b" stroke="#ffcb44" stroke-width="2.6"/>
+      <text x="562" y="84" text-anchor="middle" font-family="KDisplay" font-size="17.5" font-weight="900" fill="#ffcb44">&#x202B;النظام (System)&#x202C;</text>
+      <text x="562" y="112" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#ffffff">&#x202B;المحلول = المذاب + المذيب&#x202C;</text>
+      <text x="562" y="134" text-anchor="middle" font-family="KBody" font-size="12" font-weight="bold" fill="#7de2d1">&#x202B;(داخله يحدث التغيّر الحراري)&#x202C;</text>
+
+      <rect x="16" y="14" width="352" height="148" rx="18" fill="#ede2ff" stroke="#5a289c" stroke-width="2.5"/>
+      <rect x="196" y="24" width="158" height="31" rx="10" fill="#4c1d95"/>
+      <text x="275" y="45" text-anchor="middle" font-family="KDisplay" font-size="14.5" font-weight="900" fill="#ffcb44">&#x202B;مفهوم حرارة الذوبان&#x202C;</text>
+      <text x="354" y="80" text-anchor="end" font-family="KBody" font-size="13.5" font-weight="bold" fill="#1b1336">&#x202B;كمية الطاقة الحرارية المنطلقة أو الممتصة&#x202C;</text>
+      <text x="354" y="108" text-anchor="end" font-family="KBody" font-size="13.5" font-weight="bold" fill="#1b1336">&#x202B;عند إذابة كمية معينة من المذاب في حجم&#x202C;</text>
+      <text x="354" y="136" text-anchor="end" font-family="KBody" font-size="13.5" font-weight="bold" fill="#1b1336">&#x202B;معلوم من المذيب لتكوين محلول.&#x202C;</text>
+    </svg>
+    
+
+        <table class="k-table">
+          <thead>
+            <tr>
+              <th style="width:20%">وجه المقارنة</th>
+              <th style="width:40%">التغيّر في درجة الحرارة</th>
+              <th style="width:40%">كمية الطاقة الحرارية</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>المعنى العلمي</b></td>
+              <td>مقياس لمدى سخونة أو برودة الجسم (متوسط طاقة الحركة)</td>
+              <td>مقدار الطاقة الحرارية المنتقلة بين النظام والوسط المحيط</td>
+            </tr>
+            <tr>
+              <td><b>وحدة القياس</b></td>
+              <td><mark class="hl">الدرجة المئوية / السيليزية (°س أو <span class="chem">°C</span>)</mark> بالترمومتر</td>
+              <td><mark class="hl">الجول (<span class="chem">J</span>) أو الكيلوجول (<span class="chem">kJ</span>)</mark> وتتوقف على الكتلة</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="train-box">
+          <div class="train-head"><span>✎ تدريب ٣ (طبّق على المخطط: إذابة هيدروكسيد صوديوم في ماء فارتفعت الحرارة)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>١) النظام هو: ..................................... • الوسط المحيط يشمل: .....................................................</div>
+            <div>٢) ارسم سهم اتجاه انتقال الطاقة الحرارية: &nbsp;&nbsp; <b>[ النظام ]</b> &nbsp; ................. &nbsp; <b>[ الوسط المحيط ]</b></div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٤ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٥</span>
+          <span class="pill-cat">تشريح الجهاز والقانون</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>كوبان عازلان، وتشريح قانون التغيّر الحراري ΔT = T₂ − T₁</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <img class="plate-img" src="./targets/ar-plate-calorimeter.png" alt="تركيب المسعر الحراري المعزول">
+
+        <div class="grid-2 grow-grid">
+          <div class="mmap-tree exo">
+            <div class="mmap-hub"><span>◈ سلسلة تعليل العزل المزدوج</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>١. خامة البولي إستيرين:</b> مادة عازلة للحرارة.</div>
+              <div class="mmap-node"><b>٢. كوبان متداخلان + غطاء:</b> حبس طبقة هواء عازلة إضافية.</div>
+              <div class="mmap-node"><b>٣. النتيجة:</b> منع تسرّب الحرارة ⟵ <mark class="hl">قراءة دقيقة للذوبان</mark>.</div>
+            </div>
+          </div>
+
+          <div class="mmap-tree lav">
+            <div class="mmap-hub"><span>◈ تشريح قانون الترمومتر</span><span class="mmap-hub-sub">احفظ الرموز</span></div>
+            <div style="text-align:center;margin:0.8mm 0">
+              <span class="formula-hero">ΔT = T₂ − T₁</span>
+            </div>
+            <div class="chain-row" style="justify-content:center">
+              <span class="chain-chip"><span class="chem">T₁</span> = قراءة البداية</span>
+              <span class="chain-chip"><span class="chem">T₂</span> = قراءة النهاية</span>
+            </div>
+            <div class="chain-row" style="justify-content:center">
+              <span class="chain-chip accent-red"><span class="chem">ΔT (+)</span> موجبة ⟵ طارد</span>
+              <span class="chain-chip accent-mint"><span class="chem">ΔT (−)</span> سالبة ⟵ ماص</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="char-tip younes">
+          <img src="./img/younes.png" alt="يونس">
+          <div><span class="char-name">قاعدة يونس الذهبية للإشارة:</span> دايمًا اطرح <mark class="hl">النهاية ناقص البداية</mark> (<span class="chem">T₂ − T₁</span>) بنفس الترتيب عشان تطلع الإشارة صح!</div>
+        </div>
+
+        <div class="train-box">
+          <div class="train-head"><span>✎ تدريب ٤ (اكتشف الغلطة وصحّحها بالرموز)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>سجّل زميلك <span class="chem">T₁ = 22 °C</span> و<span class="chem">T₂ = 17 °C</span>، ثم كتب: «<span class="chem">22 − 17 = +5 °C</span> ذوبان طارد». اكتب التصويب:</div>
+            <div class="ans-pad"><div class="pad-line"></div></div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٥ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٦</span>
+          <span class="pill-cat">ورشة القراءة المعملية</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>اقرأ تدريج T₁ و T₂ بنفسك واحسب التغيّر الحراري بإشارته!</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="flow-3">
+          <div class="flow-card c2">
+            <div class="flow-step-head"><span>خطوة ١</span><span class="step-pill">قراءة</span></div>
+            <div>اقرأ مستوى السائل الأحمر عند سهم «اقرأ هنا» لـ <span class="chem">T₁</span> و<span class="chem">T₂</span>.</div>
+          </div>
+          <div class="flow-arrow">⟵</div>
+          <div class="flow-card c1">
+            <div class="flow-step-head"><span>خطوة ٢</span><span class="step-pill">حساب</span></div>
+            <div>عوّض في القانون <span class="chem">ΔT = T₂ − T₁</span> واكتب الإشارة (+ أو −).</div>
+          </div>
+          <div class="flow-arrow">⟵</div>
+          <div class="flow-card c3">
+            <div class="flow-step-head"><span>خطوة ٣</span><span class="step-pill">استنتاج</span></div>
+            <div>الإشارة السالبة تعني ماصًا، والموجبة تعني طاردًا للحرارة.</div>
+          </div>
+        </div>
+
+        
+    <svg viewBox="0 0 690 302" direction="ltr" class="vec-svg" aria-label="ترمومتر البداية T1 وترمومتر النهاية T2">
+      <rect x="3" y="3" width="684" height="296" rx="20" fill="#21143b" stroke="#1b1336" stroke-width="2.4"/>
+      
+        <g>
+          <rect x="404" y="12" width="244" height="278" rx="18" fill="#fff8e6" stroke="#1b1336" stroke-width="2.4"/>
+          <rect x="552" y="20" width="86" height="38" rx="11" fill="#ffcb44" stroke="#1b1336" stroke-width="2.2"/>
+          <text x="595" y="46" text-anchor="middle" font-family="sans-serif" font-size="19.5" font-weight="bold" fill="#1b1336">T₁</text>
+          <text x="595" y="76" text-anchor="middle" font-family="KDisplay" font-size="15.5" font-weight="900" fill="#1b1336">&#x202B;قراءة البداية&#x202C;</text>
+          <text x="595" y="95" text-anchor="middle" font-family="KUI" font-size="12" font-weight="700" fill="#463b68">&#x202B;التدريج بـ (°س)&#x202C;</text>
+
+          <line x1="566" y1="106.0" x2="544" y2="106.0" stroke="#d92b1c" stroke-width="3"/>
+          <polygon points="542,106.0 552,100.5 552,111.5" fill="#d92b1c"/>
+          <text x="603" y="110.5" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#d92b1c">&#x202B;اقرأ هنا&#x202C;</text>
+
+          <rect x="526" y="40" width="15" height="206" rx="7.5" fill="#ffffff" stroke="#1b1336" stroke-width="2.2"/>
+          <rect x="529" y="106.0" width="9" height="144.0" fill="#e63946"/>
+          <circle cx="533.5" cy="257" r="16" fill="#e63946" stroke="#1b1336" stroke-width="2.3"/>
+          <circle cx="529" cy="252" r="4.5" fill="#ff9aa2"/>
+          <line x1="508" y1="236.0" x2="526" y2="236.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="240.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">0</text><line x1="516" y1="230.8" x2="526" y2="230.8" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="225.6" x2="526" y2="225.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="220.4" x2="526" y2="220.4" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="215.2" x2="526" y2="215.2" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="210.0" x2="526" y2="210.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="214.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">5</text><line x1="516" y1="204.8" x2="526" y2="204.8" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="199.6" x2="526" y2="199.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="194.4" x2="526" y2="194.4" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="189.2" x2="526" y2="189.2" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="184.0" x2="526" y2="184.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="188.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">10</text><line x1="516" y1="178.8" x2="526" y2="178.8" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="173.6" x2="526" y2="173.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="168.39999999999998" x2="526" y2="168.39999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="163.2" x2="526" y2="163.2" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="158.0" x2="526" y2="158.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="162.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">15</text><line x1="516" y1="152.8" x2="526" y2="152.8" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="147.6" x2="526" y2="147.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="142.39999999999998" x2="526" y2="142.39999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="137.2" x2="526" y2="137.2" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="132.0" x2="526" y2="132.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="136.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">20</text><line x1="516" y1="126.8" x2="526" y2="126.8" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="121.6" x2="526" y2="121.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="116.39999999999999" x2="526" y2="116.39999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="111.19999999999999" x2="526" y2="111.19999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="106.0" x2="526" y2="106.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="110.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">25</text><line x1="516" y1="100.79999999999998" x2="526" y2="100.79999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="95.6" x2="526" y2="95.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="90.4" x2="526" y2="90.4" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="85.19999999999999" x2="526" y2="85.19999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="80.0" x2="526" y2="80.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="84.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">30</text><line x1="516" y1="74.79999999999998" x2="526" y2="74.79999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="69.6" x2="526" y2="69.6" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="64.4" x2="526" y2="64.4" stroke="#5b507a" stroke-width="1.1"/><line x1="516" y1="59.19999999999999" x2="526" y2="59.19999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="508" y1="54.0" x2="526" y2="54.0" stroke="#1b1336" stroke-width="2.2"/><text x="500" y="58.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">35</text>
+        </g>
+        
+      <path d="M 392 151 L 306 151" stroke="#ffcb44" stroke-width="4.5"/>
+      <polygon points="296,151 313,141 313,161" fill="#ffcb44"/>
+      <rect x="294" y="99" width="104" height="36" rx="10" fill="#ffcb44" stroke="#1b1336" stroke-width="2"/>
+      <text x="346" y="123" text-anchor="middle" font-family="sans-serif" font-size="15.5" font-weight="bold" fill="#1b1336">ΔT = T₂ − T₁</text>
+      <text x="346" y="179" text-anchor="middle" font-family="KUI" font-size="13" font-weight="700" fill="#7de2d1">&#x202B;بعد إذابة الملح&#x202C;</text>
+      
+        <g>
+          <rect x="36" y="12" width="244" height="278" rx="18" fill="#e6fbff" stroke="#1b1336" stroke-width="2.4"/>
+          <rect x="184" y="20" width="86" height="38" rx="11" fill="#7de2d1" stroke="#1b1336" stroke-width="2.2"/>
+          <text x="227" y="46" text-anchor="middle" font-family="sans-serif" font-size="19.5" font-weight="bold" fill="#1b1336">T₂</text>
+          <text x="227" y="76" text-anchor="middle" font-family="KDisplay" font-size="15.5" font-weight="900" fill="#1b1336">&#x202B;قراءة النهاية&#x202C;</text>
+          <text x="227" y="95" text-anchor="middle" font-family="KUI" font-size="12" font-weight="700" fill="#463b68">&#x202B;التدريج بـ (°س)&#x202C;</text>
+
+          <line x1="198" y1="142.39999999999998" x2="176" y2="142.39999999999998" stroke="#d92b1c" stroke-width="3"/>
+          <polygon points="174,142.39999999999998 184,136.89999999999998 184,147.89999999999998" fill="#d92b1c"/>
+          <text x="235" y="146.89999999999998" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#d92b1c">&#x202B;اقرأ هنا&#x202C;</text>
+
+          <rect x="158" y="40" width="15" height="206" rx="7.5" fill="#ffffff" stroke="#1b1336" stroke-width="2.2"/>
+          <rect x="161" y="142.39999999999998" width="9" height="107.60000000000002" fill="#e63946"/>
+          <circle cx="165.5" cy="257" r="16" fill="#e63946" stroke="#1b1336" stroke-width="2.3"/>
+          <circle cx="161" cy="252" r="4.5" fill="#ff9aa2"/>
+          <line x1="140" y1="236.0" x2="158" y2="236.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="240.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">0</text><line x1="148" y1="230.8" x2="158" y2="230.8" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="225.6" x2="158" y2="225.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="220.4" x2="158" y2="220.4" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="215.2" x2="158" y2="215.2" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="210.0" x2="158" y2="210.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="214.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">5</text><line x1="148" y1="204.8" x2="158" y2="204.8" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="199.6" x2="158" y2="199.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="194.4" x2="158" y2="194.4" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="189.2" x2="158" y2="189.2" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="184.0" x2="158" y2="184.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="188.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">10</text><line x1="148" y1="178.8" x2="158" y2="178.8" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="173.6" x2="158" y2="173.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="168.39999999999998" x2="158" y2="168.39999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="163.2" x2="158" y2="163.2" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="158.0" x2="158" y2="158.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="162.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">15</text><line x1="148" y1="152.8" x2="158" y2="152.8" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="147.6" x2="158" y2="147.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="142.39999999999998" x2="158" y2="142.39999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="137.2" x2="158" y2="137.2" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="132.0" x2="158" y2="132.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="136.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">20</text><line x1="148" y1="126.8" x2="158" y2="126.8" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="121.6" x2="158" y2="121.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="116.39999999999999" x2="158" y2="116.39999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="111.19999999999999" x2="158" y2="111.19999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="106.0" x2="158" y2="106.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="110.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">25</text><line x1="148" y1="100.79999999999998" x2="158" y2="100.79999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="95.6" x2="158" y2="95.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="90.4" x2="158" y2="90.4" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="85.19999999999999" x2="158" y2="85.19999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="80.0" x2="158" y2="80.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="84.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">30</text><line x1="148" y1="74.79999999999998" x2="158" y2="74.79999999999998" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="69.6" x2="158" y2="69.6" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="64.4" x2="158" y2="64.4" stroke="#5b507a" stroke-width="1.1"/><line x1="148" y1="59.19999999999999" x2="158" y2="59.19999999999999" stroke="#5b507a" stroke-width="1.1"/><line x1="140" y1="54.0" x2="158" y2="54.0" stroke="#1b1336" stroke-width="2.2"/><text x="132" y="58.5" text-anchor="end" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">35</text>
+        </g>
+        
+    </svg>
+    
+
+        <div class="train-box grow-box">
+          <div class="train-head"><span>✎ تدريب ٥ (بطاقة التسجيل المعملي — اقرأ التدريج أعلاه وأكمل الخانات الأربع)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div class="grid-4-cells">
+              <div class="train-cell" style="background:#fff8df;border-color:#d97706">
+                <b>١) قراءة الترمومترين من الرسم:</b>
+                <div>• قراءة البداية <span class="chem">T₁</span> = ................. °س</div>
+                <div>• قراءة النهاية <span class="chem">T₂</span> = ................. °س</div>
+              </div>
+              <div class="train-cell" style="background:#e8f8ff;border-color:#0e6ba8">
+                <b>٢) حساب التغيّر بإشارته (<span class="chem">ΔT = T₂ − T₁</span>):</b>
+                <div>التعويض: ...........................................</div>
+                <div>الناتج بالإشارة: <span class="chem">ΔT</span> = .................... °س</div>
+              </div>
+              <div class="train-cell" style="background:#e6faf6;border-color:#0c635c">
+                <b>٣) نوع الذوبان والتعليل من الإشارة:</b>
+                <div>النوع: ( ماص &nbsp;/&nbsp; طارد ) للحرارة</div>
+                <div>السبب: ..............................................</div>
+              </div>
+              <div class="train-cell" style="background:#ffe8ef;border-color:#c92a68">
+                <b>٤) اتجاه الحرارة والمادة المحتملة:</b>
+                <div>الاتجاه: ( من المحلول للماء / من الماء للذوبان )</div>
+                <div>مثال للملح: .........................................</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+    <div class="ar-gateway">
+      <a class="qr-box" href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=calorimeter" target="_blank" rel="noopener" title="افتح التجربة التفاعلية ثلاثية الأبعاد">
+        <img src="./targets/qr-calorimeter.png" alt="كود المعمل التفاعلي">
+        <span>امسح أو اضغط</span>
+      </a>
+      <div class="ar-gw-body">
+        <div class="ar-gw-eyebrow">✦ بوابة «مَعْمَل» المجسّمة (WebAR + 360° VR) • التجربة بتطلع من المذكرة قطعةً قطعة!</div>
+        <div class="ar-gw-title"><a href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=calorimeter" target="_blank" rel="noopener">تجربة مَعْمَل المجسّمة: صبّ الأملاح في المسعر الحراري ← افتح التجربة مباشرة</a></div>
+        <div class="ar-gw-sub">شاهد الكوبين والترمومتر يبرزان من ص ٥ واختبر الأملاح الطاردة والماصّة — وجّه كاميرا الموبايل للرسمة أعلاه لتخرج التجربة ثلاثية الأبعاد من الورقة!</div>
+      </div>
+    </div>
+    
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٦ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٧</span>
+          <span class="pill-cat">خريطة الأملاح المصوّرة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>مصفوفة أملاح الذوبان.. وقاعدة «نفس الملح في صورتين»!</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        
+    <svg viewBox="0 0 760 122" direction="ltr" class="vec-svg" aria-label="رسوم الأملاح المرجعية">
+      <rect x="3" y="3" width="754" height="116" rx="16" fill="#21143b" stroke="#1b1336" stroke-width="2.4"/>
+
+      <rect x="574" y="13" width="170" height="96" rx="12" fill="#ffe8de" stroke="#ff9f1c" stroke-width="2"/>
+      <rect x="696" y="29" width="36" height="58" rx="7" fill="#ffffff" stroke="#1b1336" stroke-width="2.2"/>
+      <rect x="700" y="20" width="28" height="10" rx="3" fill="#e63946" stroke="#1b1336" stroke-width="1.8"/>
+      <circle cx="708" cy="70" r="5" fill="#ffb703"/><circle cx="720" cy="72" r="5" fill="#fb8500"/><circle cx="714" cy="60" r="5" fill="#ffb703"/>
+      <text x="635" y="46" text-anchor="middle" font-family="KDisplay" font-size="14.5" font-weight="900" fill="#9a2b15">&#x202B;أملاح طاردة بشدّة&#x202C;</text>
+      <text x="635" y="69" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">NaOH • CaCl₂</text>
+      <text x="635" y="92" text-anchor="middle" font-family="KUI" font-size="11.8" font-weight="700" fill="#b82518">&#x202B;ترفع الحرارة (+ΔT)&#x202C;</text>
+
+      <rect x="388" y="13" width="174" height="96" rx="12" fill="#dff7ff" stroke="#4cc9f0" stroke-width="2"/>
+      <rect x="514" y="29" width="36" height="58" rx="7" fill="#ffffff" stroke="#1b1336" stroke-width="2.2"/>
+      <rect x="518" y="20" width="28" height="10" rx="3" fill="#0077b6" stroke="#1b1336" stroke-width="1.8"/>
+      <circle cx="526" cy="70" r="5" fill="#4cc9f0"/><circle cx="538" cy="72" r="5" fill="#90e0ef"/><circle cx="532" cy="60" r="5" fill="#00b4d8"/>
+      <text x="450" y="46" text-anchor="middle" font-family="KDisplay" font-size="14.5" font-weight="900" fill="#0b5282">&#x202B;أملاح ماصّة مبرّدة&#x202C;</text>
+      <text x="450" y="69" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">NH₄NO₃ • K₂SO₄</text>
+      <text x="450" y="92" text-anchor="middle" font-family="KUI" font-size="11.8" font-weight="700" fill="#006d77">&#x202B;تخفض الحرارة (−ΔT)&#x202C;</text>
+
+      <rect x="202" y="13" width="174" height="96" rx="12" fill="#f3ecff" stroke="#b592ff" stroke-width="2"/>
+      <polygon points="348,32 364,44 358,62 338,62 332,44" fill="#0d74e8" stroke="#1b1336" stroke-width="2"/>
+      <polygon points="348,70 362,80 356,94 340,94 334,80" fill="#ffffff" stroke="#1b1336" stroke-width="2"/>
+      <text x="266" y="46" text-anchor="middle" font-family="KDisplay" font-size="14" font-weight="900" fill="#21143b">&#x202B;كبريتات النحاس&#x202C;</text>
+      <text x="266" y="68" text-anchor="middle" font-family="KUI" font-size="11.5" font-weight="700" fill="#0d5bd9">&#x202B;مائية زرقاء (ماص)&#x202C;</text>
+      <text x="266" y="91" text-anchor="middle" font-family="KUI" font-size="11.5" font-weight="700" fill="#9a2b15">&#x202B;لا مائية بيضاء (طارد)&#x202C;</text>
+
+      <rect x="16" y="13" width="174" height="96" rx="12" fill="#ffe6f0" stroke="#fd7391" stroke-width="2"/>
+      <polygon points="162,32 178,44 172,62 152,62 146,44" fill="#e84a7f" stroke="#1b1336" stroke-width="2"/>
+      <polygon points="162,70 176,80 170,94 154,94 148,80" fill="#1e56c8" stroke="#1b1336" stroke-width="2"/>
+      <text x="80" y="46" text-anchor="middle" font-family="KDisplay" font-size="14" font-weight="900" fill="#21143b">&#x202B;كلوريد الكوبلت&#x202C;</text>
+      <text x="80" y="68" text-anchor="middle" font-family="KUI" font-size="11.5" font-weight="700" fill="#c92a68">&#x202B;مائي وردي (ماص)&#x202C;</text>
+      <text x="80" y="91" text-anchor="middle" font-family="KUI" font-size="11.5" font-weight="700" fill="#1e56c8">&#x202B;لا مائي أزرق (طارد)&#x202C;</text>
+    </svg>
+    
+
+        <table class="k-table">
+          <thead>
+            <tr>
+              <th style="width:22%">الفئة / المقارنة</th>
+              <th style="width:39%">ذوبان طارد (<span class="chem" style="color:#ffcb44">ΔT &gt; 0</span> ، ترتفع <span class="chem" style="color:#ffcb44">T₂</span>)</th>
+              <th style="width:39%">ذوبان ماص (<span class="chem" style="color:#7de2d1">ΔT &lt; 0</span> ، تنخفض <span class="chem" style="color:#7de2d1">T₂</span>)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>قواعد وأملاح ١</b></td>
+              <td>هيدروكسيد الصوديوم <span class="chem">NaOH(s)</span></td>
+              <td>نترات الأمونيوم <span class="chem">NH₄NO₃(s)</span></td>
+            </tr>
+            <tr>
+              <td><b>أملاح شائعة ٢</b></td>
+              <td>كلوريد الكالسيوم <span class="chem">CaCl₂(s)</span> • كبريتات الماغنسيوم <span class="chem">MgSO₄(s)</span></td>
+              <td>كبريتات البوتاسيوم <span class="chem">K₂SO₄(s)</span></td>
+            </tr>
+            <tr>
+              <td><b>كربونات × بيكربونات</b></td>
+              <td>كربونات الصوديوم <span class="chem">Na₂CO₃(s)</span></td>
+              <td>بيكربونات الصوديوم <span class="chem">NaHCO₃(s)</span></td>
+            </tr>
+            <tr class="subhead">
+              <td colspan="3">★ نفس الملح في صورتين: قارن الصورة اللامائية والصورة المائية في نفس الصف</td>
+            </tr>
+            <tr>
+              <td><b>١. كبريتات النحاس</b></td>
+              <td>اللامائية (بيضاء): <span class="chem">CuSO₄(s)</span> <span class="tag-exo">طارد +</span></td>
+              <td>المائية (زرقاء): <span class="chem">CuSO₄·5H₂O(s)</span> <span class="tag-endo">ماص −</span></td>
+            </tr>
+            <tr>
+              <td><b>٢. كلوريد الكوبلت</b></td>
+              <td>اللامائي (أزرق): <span class="chem">CoCl₂(s)</span> <span class="tag-exo">طارد +</span></td>
+              <td>المائي (وردي): <span class="chem">CoCl₂·6H₂O(s)</span> <span class="tag-endo">ماص −</span></td>
+            </tr>
+            <tr>
+              <td><b>٣. كلوريد الليثيوم</b></td>
+              <td>اللامائي: <span class="chem">LiCl(s)</span> <span class="tag-exo">طارد +</span></td>
+              <td>المائي (المتهدرت): <span class="chem">LiCl·H₂O(s)</span> <span class="tag-endo">ماص −</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="char-tip younes">
+          <img src="./img/salma.png" alt="سلمى">
+          <div><span class="char-name">قاعدة سلمى السريعة:</span> نفس الملح وهو <mark class="hl">لا مائي جاف</mark> ذوبانه <b>طارد (+)</b>، وهو مرتبط بماء التبلور (<mark class="hl">مائي ·nH₂O</mark>) ذوبانه <b>ماص (−)</b>!</div>
+        </div>
+
+        <div class="train-box grow-box">
+          <div class="train-head"><span>✎ تدريب ٦ (استنتج وقارن — <b>ارجع للجدول وقت الحل</b>)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div class="grid-2" style="flex:1">
+              <div class="train-cell" style="background:#fff9eb;border-color:#d97706">
+                <b>١) برطمانان بدون ملصق (كربونات وبيكربونات صوديوم) — كيف تميّزهما بالماء والترمومتر؟ (ارجع للجدول وقت الحل)</b>
+                <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div><div class="pad-line"></div></div>
+              </div>
+              <div class="train-cell" style="background:#eefaff;border-color:#0e6ba8">
+                <b>٢) أيّهما يرفع حرارة الماء عند ذوبانه: <span class="chem">LiCl</span> أم <span class="chem">LiCl·H₂O</span>؟ ولماذا؟ (ارجع للجدول وقت الحل)</b>
+                <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div><div class="pad-line"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٧ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٨</span>
+          <span class="pill-cat">مخطط انعكاسي • البلّورات المتهدرتة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>بلّورات تغيّر لونها بالتسخين وبقطرة ميّه!</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="q-opener">
+          <b>افصل بين المفهومين:</b> <mark class="hl">في الذوبان يتكوّن محلول. أمّا هنا فنتابع البلّورة نفسها عندما تكتسب ماء التبلور أو تفقده.</mark>
+        </div>
+
+        <img class="plate-img" src="./targets/ar-plate-crystals.png" alt="تحول بلورات كبريتات النحاس وكلوريد الكوبلت">
+
+        <div class="grid-2 grow-grid">
+          <div class="mmap-tree exo">
+            <div class="mmap-hub"><span>◈ ١. كبريتات النحاس</span><span class="mmap-hub-sub">٥ جزيئات ماء</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>المائية:</b> <span class="chem">CuSO₄·5H₂O</span> — <b>لون أزرق</b>.</div>
+              <div class="mmap-node"><b>بالتسخين (ماص):</b> تفقد الماء ⟵ <span class="chem">CuSO₄</span> <b>بيضاء</b>.</div>
+              <div class="mmap-node"><b>بقطرات ماء (طارد):</b> تعود <b>زرقاء</b> وتنطلق حرارة.</div>
+            </div>
+          </div>
+
+          <div class="mmap-tree endo">
+            <div class="mmap-hub"><span>◈ ٢. كلوريد الكوبلت</span><span class="mmap-hub-sub">٦ جزيئات ماء</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>المائي:</b> <span class="chem">CoCl₂·6H₂O</span> — <b>لون وردي</b>.</div>
+              <div class="mmap-node"><b>بالتسخين (ماص):</b> يفقد الماء ⟵ <span class="chem">CoCl₂</span> <b>أزرق</b>.</div>
+              <div class="mmap-node"><b>بقطرات ماء (طارد):</b> يعود <b>ورديًا</b> (كاشف للرطوبة!).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="train-box">
+          <div class="train-head"><span>✎ تدريب ٧ (اختبر الكاشف اللوني بالقلم)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>ورقة مبلّلة بكلوريد الكوبلت اللامائي (<b>أزرق</b>) عُرّضت لبخار ماء فتحوّلت إلى <b>اللون الوردي</b>. فسّر السبب ونوع التغيّر الحراري:</div>
+            <div class="ans-pad"><div class="pad-line"></div></div>
+          </div>
+        </div>
+
+        
+    <div class="ar-gateway">
+      <a class="qr-box" href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=crystals" target="_blank" rel="noopener" title="افتح التجربة التفاعلية ثلاثية الأبعاد">
+        <img src="./targets/qr-crystals.png" alt="كود المعمل التفاعلي">
+        <span>امسح أو اضغط</span>
+      </a>
+      <div class="ar-gw-body">
+        <div class="ar-gw-eyebrow">✦ بوابة «مَعْمَل» المجسّمة (WebAR + 360° VR) • التجربة بتطلع من المذكرة قطعةً قطعة!</div>
+        <div class="ar-gw-title"><a href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=crystals" target="_blank" rel="noopener">تجربة مَعْمَل المجسّمة: تسخين وتميّؤ البلّورات الملوّنة ← افتح التجربة مباشرة</a></div>
+        <div class="ar-gw-sub">سخّن بلّورات كبريتات النحاس الزرقاء للبيضاء ثم أضف قطرات الماء بالقطّارة — وجّه كاميرا الموبايل للرسمة أعلاه لتخرج التجربة ثلاثية الأبعاد من الورقة!</div>
+      </div>
+    </div>
+    
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٨ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٠٩</span>
+          <span class="pill-cat">خريطة الرسم البياني • مثال محلول</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>كل ما نزوّد كتلة الملح.. الحرارة تتغيّر إزاي؟</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="q-opener">
+          <b>مثال محلول بنقطتين فقط:</b> في حجم ثابت من الماء، إذابة <mark class="hl">١ جم يقابله ارتفاع ٤٫٥ °س</mark>، وإذابة <mark class="hl">٢ جم يقابله ارتفاع ٩ °س</mark>.
+        </div>
+
+        
+    <svg viewBox="0 0 696 276" direction="ltr" class="vec-svg" aria-label="مثال محلول بنقطتين فقط">
+      <rect x="4" y="4" width="688" height="268" rx="18" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+      <line x1="96" y1="28" x2="96" y2="232" stroke="#d5c9ea" stroke-width="1.8"/><text x="96" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">0</text><line x1="151" y1="28" x2="151" y2="232" stroke="#d5c9ea" stroke-width="1"/><text x="151" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">0٫5</text><line x1="206" y1="28" x2="206" y2="232" stroke="#d5c9ea" stroke-width="1.8"/><text x="206" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">1</text><line x1="261" y1="28" x2="261" y2="232" stroke="#d5c9ea" stroke-width="1"/><text x="261" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">1٫5</text><line x1="316" y1="28" x2="316" y2="232" stroke="#d5c9ea" stroke-width="1.8"/><text x="316" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">2</text><line x1="371" y1="28" x2="371" y2="232" stroke="#d5c9ea" stroke-width="1"/><text x="371" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">2٫5</text><line x1="426" y1="28" x2="426" y2="232" stroke="#d5c9ea" stroke-width="1.8"/><text x="426" y="253" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">3</text><line x1="96" y1="232.0" x2="438" y2="232.0" stroke="#d5c9ea" stroke-width="1.8"/><text x="84" y="236.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">0</text><line x1="96" y1="208.75" x2="438" y2="208.75" stroke="#d5c9ea" stroke-width="1"/><text x="84" y="213.25" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">1٫5</text><line x1="96" y1="185.5" x2="438" y2="185.5" stroke="#d5c9ea" stroke-width="1.8"/><text x="84" y="190.0" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">3</text><line x1="96" y1="162.25" x2="438" y2="162.25" stroke="#d5c9ea" stroke-width="1"/><text x="84" y="166.75" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">4٫5</text><line x1="96" y1="139.0" x2="438" y2="139.0" stroke="#d5c9ea" stroke-width="1.8"/><text x="84" y="143.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">6</text><line x1="96" y1="115.75" x2="438" y2="115.75" stroke="#d5c9ea" stroke-width="1"/><text x="84" y="120.25" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">7٫5</text><line x1="96" y1="92.5" x2="438" y2="92.5" stroke="#d5c9ea" stroke-width="1.8"/><text x="84" y="97.0" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">9</text><line x1="96" y1="69.25" x2="438" y2="69.25" stroke="#d5c9ea" stroke-width="1"/><text x="84" y="73.75" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">10٫5</text><line x1="96" y1="46.0" x2="438" y2="46.0" stroke="#d5c9ea" stroke-width="1.8"/><text x="84" y="50.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">12</text>
+      <line x1="96" y1="232" x2="452" y2="232" stroke="#1b1336" stroke-width="3"/>
+      <polygon points="458,232 445,226.5 445,237.5" fill="#1b1336"/>
+      <line x1="96" y1="232" x2="96" y2="20" stroke="#1b1336" stroke-width="3"/>
+      <polygon points="96,14 90.5,26 101.5,26" fill="#1b1336"/>
+
+      <line x1="206" y1="232" x2="206" y2="162.25" stroke="#0d9488" stroke-width="2.1" stroke-dasharray="5,3"/>
+      <line x1="96" y1="162.25" x2="206" y2="162.25" stroke="#0d9488" stroke-width="2.1" stroke-dasharray="5,3"/>
+
+      <line x1="316" y1="232" x2="316" y2="92.5" stroke="#d92b1c" stroke-width="2.1" stroke-dasharray="5,3"/>
+      <line x1="96" y1="92.5" x2="316" y2="92.5" stroke="#d92b1c" stroke-width="2.1" stroke-dasharray="5,3"/>
+
+      <line x1="96" y1="232" x2="371.0" y2="57.625" stroke="#21143b" stroke-width="3.6"/>
+      <circle cx="206" cy="162.25" r="8" fill="#2ec4b6" stroke="#1b1336" stroke-width="2.4"/>
+      <circle cx="316" cy="92.5" r="8" fill="#ffcb44" stroke="#1b1336" stroke-width="2.4"/>
+
+      <rect x="216" y="148.25" width="104" height="28" rx="8" fill="#d8fbf5" stroke="#0d9488" stroke-width="1.8"/>
+      <text x="268" y="166.75" text-anchor="middle" font-family="KUI" font-size="12.8" font-weight="700" fill="#1b1336">&#x202B;(١ جم ، ٤٫٥ °س)&#x202C;</text>
+
+      <rect x="326" y="78.5" width="104" height="28" rx="8" fill="#fff0b8" stroke="#d97706" stroke-width="1.8"/>
+      <text x="378" y="97.0" text-anchor="middle" font-family="KUI" font-size="12.8" font-weight="700" fill="#1b1336">&#x202B;(٢ جم ، ٩ °س)&#x202C;</text>
+
+      <text x="275" y="266" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#21143b">&#x202B;المتغيّر المستقل: كتلة الملح المذاب (جم)&#x202C;</text>
+      <text x="24" y="134" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#21143b" transform="rotate(-90 24 134)">&#x202B;المتغيّر التابع: الارتفاع ΔT (°س)&#x202C;</text>
+
+      <rect x="470" y="20" width="208" height="232" rx="16" fill="#f1e8ff" stroke="#5a289c" stroke-width="2.3"/>
+      <rect x="470" y="20" width="208" height="38" rx="15" fill="#21143b"/>
+      <text x="574" y="45" text-anchor="middle" font-family="KDisplay" font-size="15.5" font-weight="900" fill="#ffcb44">&#x202B;استنتاج العلاقة الطردية&#x202C;</text>
+      <text x="664" y="86" text-anchor="end" font-family="KBody" font-size="13" font-weight="bold" fill="#1b1336">&#x202B;• عند ١ جم ← ΔT = ٤٫٥ °س&#x202C;</text>
+      <text x="664" y="116" text-anchor="end" font-family="KBody" font-size="13" font-weight="bold" fill="#1b1336">&#x202B;• عند ٢ جم ← ΔT = ٩ °س&#x202C;</text>
+      <line x1="486" y1="136" x2="662" y2="136" stroke="#bda8e3" stroke-width="1.6"/>
+      <text x="574" y="160" text-anchor="middle" font-family="KUI" font-size="12.8" font-weight="700" fill="#3a2e5c">&#x202B;خط مستقيم يمر بنقطة الأصل&#x202C;</text>
+      <rect x="484" y="176" width="180" height="62" rx="12" fill="#ffe8c2" stroke="#d97706" stroke-width="2"/>
+      <text x="574" y="201" text-anchor="middle" font-family="KDisplay" font-size="14.5" font-weight="900" fill="#9a2b15">&#x202B;علاقة طردية منتظمة&#x202C;</text>
+      <text x="574" y="224" text-anchor="middle" font-family="KUI" font-size="12.2" font-weight="700" fill="#1b1336">&#x202B;تتضاعف ΔT بمضاعفة الكتلة&#x202C;</text>
+    </svg>
+    
+
+        <div class="flow-3">
+          <div class="flow-card c1">
+            <div class="flow-step-head"><span>١. المتغيّر المستقل</span><span class="step-pill">أفقي X</span></div>
+            <div><b>هو السبب الذي نغيّره:</b> كتلة الملح المذاب بالجرام (<span class="chem">g</span>).</div>
+          </div>
+          <div class="flow-arrow">⟵</div>
+          <div class="flow-card c3">
+            <div class="flow-step-head"><span>٢. المتغيّر التابع</span><span class="step-pill">رأسي Y</span></div>
+            <div><b>هو النتيجة المقاسة:</b> مقدار الارتفاع في الحرارة <span class="chem">ΔT</span> (°س).</div>
+          </div>
+          <div class="flow-arrow">⚖</div>
+          <div class="flow-card c2">
+            <div class="flow-step-head"><span>٣. المتغيّرات الضابطة</span><span class="step-pill">ثوابت</span></div>
+            <div><b>نثبّتها لعدالة التجربة:</b> حجم الماء • نوع الملح • العزل.</div>
+          </div>
+        </div>
+
+        <div class="train-box grow-box">
+          <div class="train-head"><span>✎ تدريب ٨ (استخرج الحل مباشرةً من النقطتين المرسومتين أعلاه)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div class="grid-3-cells">
+              <div class="train-cell" style="background:#e8f8ff;border-color:#0e6ba8">
+                <b>١) عند مضاعفة الكتلة من ١ إلى ٢ جم:</b>
+                <div style="font-size:9.8pt;color:#3d2566">قارن قيمة <span class="chem">ΔT</span> عند النقطتين:</div>
+                <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div><div class="pad-line"></div></div>
+              </div>
+              <div class="train-cell" style="background:#fff8df;border-color:#d97706">
+                <b>٢) من الرسم عند الكتلة ١٫٥ جم:</b>
+                <div style="font-size:9.8pt;color:#3d2566">أصعد رأسيًا من ١٫٥ جم للخط المستقيم:</div>
+                <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+                <div>الارتفاع <span class="chem">ΔT</span> = .............. °س</div>
+              </div>
+              <div class="train-cell" style="background:#e6faf6;border-color:#0c635c">
+                <b>٣) نوع الذوبان وسبب تثبيت حجم الماء:</b>
+                <div style="font-size:9.8pt;color:#3d2566">حدّد النوع والغرض من ثبات الحجم:</div>
+                <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div><div class="pad-line"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٩ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٠</span>
+          <span class="pill-cat">ورشة الرسم البياني • ارسم بنفسك</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>تجربة كلوريد الليثيوم اللامائي: احسب ومثّل بيانيًا!</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="q-opener">
+          <b>بيانات التجربة:</b> إذابة ٤ كتل من <b>كلوريد الليثيوم اللامائي <span class="chem">LiCl(s)</span></b> في <span class="chem">30 mL</span> ماء حرارته الابتدائية <span class="chem">T₁ = 21 °C</span>. احسب الفروق ومثّل النقاط الأربع!
+        </div>
+
+        <table class="k-table">
+          <thead>
+            <tr>
+              <th>كتلة الملح المذاب <span class="chem" style="color:#ffcb44">m</span> (جم)</th>
+              <th>درجة البداية <span class="chem" style="color:#ffcb44">T₁</span> (°س)</th>
+              <th>درجة النهاية بعد ٣٠ ثانية <span class="chem" style="color:#ffcb44">T₂</span> (°س)</th>
+              <th>التغيّر في درجة الحرارة <span class="chem" style="color:#7de2d1">ΔT = T₂ − T₁</span> (°س)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><b>١ جم</b></td><td>٢١</td><td>٢٥٫٥</td><td>....................</td></tr>
+            <tr><td><b>٢ جم</b></td><td>٢١</td><td>٣٠</td><td>....................</td></tr>
+            <tr><td><b>٣ جم</b></td><td>٢١</td><td>٣٤٫٥</td><td>....................</td></tr>
+            <tr><td><b>٤ جم</b></td><td>٢١</td><td>٣٩</td><td>....................</td></tr>
+          </tbody>
+        </table>
+
+        
+    <svg viewBox="0 0 688 322" direction="ltr" class="vec-svg" aria-label="شبكة رسم بياني فارغة للطالب">
+      <rect x="4" y="4" width="680" height="314" rx="18" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+      <line x1="94" y1="18" x2="94" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="94" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">0</text><line x1="136" y1="18" x2="136" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="178" y1="18" x2="178" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="178" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">1</text><line x1="220" y1="18" x2="220" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="262" y1="18" x2="262" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="262" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">2</text><line x1="304" y1="18" x2="304" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="346" y1="18" x2="346" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="346" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">3</text><line x1="388" y1="18" x2="388" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="430" y1="18" x2="430" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="430" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">4</text><line x1="472" y1="18" x2="472" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="514" y1="18" x2="514" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="514" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">5</text><line x1="556" y1="18" x2="556" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="598" y1="18" x2="598" y2="280" stroke="#8e7ab8" stroke-width="1.7"/><text x="598" y="301" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="bold" fill="#1b1336">6</text><line x1="640" y1="18" x2="640" y2="280" stroke="#dfd6f2" stroke-width="0.9"/><line x1="94" y1="280.0" x2="640" y2="280.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="284.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">0</text><line x1="94" y1="271.4" x2="640" y2="271.4" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="262.8" x2="640" y2="262.8" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="254.2" x2="640" y2="254.2" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="245.6" x2="640" y2="245.6" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="237.0" x2="640" y2="237.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="241.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">5</text><line x1="94" y1="228.4" x2="640" y2="228.4" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="219.8" x2="640" y2="219.8" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="211.2" x2="640" y2="211.2" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="202.60000000000002" x2="640" y2="202.60000000000002" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="194.0" x2="640" y2="194.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="198.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">10</text><line x1="94" y1="185.4" x2="640" y2="185.4" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="176.8" x2="640" y2="176.8" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="168.2" x2="640" y2="168.2" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="159.60000000000002" x2="640" y2="159.60000000000002" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="151.0" x2="640" y2="151.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="155.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">15</text><line x1="94" y1="142.4" x2="640" y2="142.4" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="133.8" x2="640" y2="133.8" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="125.20000000000002" x2="640" y2="125.20000000000002" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="116.6" x2="640" y2="116.6" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="108.0" x2="640" y2="108.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="112.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">20</text><line x1="94" y1="99.4" x2="640" y2="99.4" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="90.80000000000001" x2="640" y2="90.80000000000001" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="82.20000000000002" x2="640" y2="82.20000000000002" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="73.60000000000002" x2="640" y2="73.60000000000002" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="65.0" x2="640" y2="65.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="69.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">25</text><line x1="94" y1="56.400000000000006" x2="640" y2="56.400000000000006" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="47.80000000000001" x2="640" y2="47.80000000000001" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="39.20000000000002" x2="640" y2="39.20000000000002" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="30.600000000000023" x2="640" y2="30.600000000000023" stroke="#e7e0f7" stroke-width="0.8"/><line x1="94" y1="22.0" x2="640" y2="22.0" stroke="#8e7ab8" stroke-width="1.7"/><text x="84" y="26.5" text-anchor="end" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1b1336">30</text>
+      <line x1="94" y1="280" x2="652" y2="280" stroke="#1b1336" stroke-width="2.8"/>
+      <polygon points="658,280 647,274.5 647,285.5" fill="#1b1336"/>
+      <line x1="94" y1="280" x2="94" y2="11" stroke="#1b1336" stroke-width="2.8"/>
+      <polygon points="94,5 88.5,16 99.5,16" fill="#1b1336"/>
+
+      <text x="367.0" y="312" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#21143b">&#x202B;كتلة كلوريد الليثيوم اللامائي المذابة بالجرام (جم)&#x202C;</text>
+      <text x="24" y="152" text-anchor="middle" font-family="KUI" font-size="13.5" font-weight="700" fill="#21143b" transform="rotate(-90 24 152)">&#x202B;مقدار التغيّر في درجة الحرارة ΔT (°س)&#x202C;</text>
+    </svg>
+    
+
+        <div class="train-box grow-box">
+          <div class="train-head"><span>✎ تدريب ٩ (استنتج وتنبّأ من رسمك البياني)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div class="grid-2" style="flex:1">
+              <div class="train-cell" style="background:#f3ecff;border-color:#5a289c">
+                <b>١) صف شكل الخط الناتج ونوع العلاقة البيانية:</b>
+                <div>......................................................................</div>
+              </div>
+              <div class="train-cell" style="background:#fff8df;border-color:#d97706">
+                <b>٢) التنبّؤ عند إذابة ٦ جم في <span class="chem">30 mL</span> ماء:</b>
+                <div><span class="chem">ΔT</span> = ........... °س &nbsp;|&nbsp; <span class="chem">T₂</span> = ........... °س</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٠ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١١</span>
+          <span class="pill-cat">إنفوجرافيك تطبيقي • الكمّادات والأمان</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>الكمّادات الفورية.. وقاعدة الأمان الذهبية عند تخفيف الحمض</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <img class="plate-img" src="./targets/ar-plate-packs.png" alt="الكمادات الفورية وأمان تخفيف الحمض">
+
+        <div class="grid-2 grow-grid">
+          <div class="mmap-tree exo">
+            <div class="mmap-hub"><span>◈ كمّادات الضغط الفورية</span><span class="mmap-hub-sub">مرّة واحدة</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>الباردة:</b> ملح <b>نترات الأمونيوم <span class="chem">NH₄NO₃</span></b> (ماص) ⟵ <mark class="hl">تضييق الأوعية الدموية</mark> وتخفيف التورّم.</div>
+              <div class="mmap-node"><b>الدافئة:</b> ملح <b>كبريتات الماغنسيوم <span class="chem">MgSO₄</span></b> (طارد) ⟵ <mark class="hl">توسيع الأوعية الدموية</mark> وإراحة العضلات.</div>
+            </div>
+          </div>
+
+          <div class="mmap-tree endo">
+            <div class="mmap-hub"><span>▲ أمان تخفيف الحمض المركّز</span><span class="mmap-hub-sub">طارد جدًا!</span></div>
+            <div class="mmap-branches">
+              <div class="mmap-node"><b>✓ الصواب الآمن:</b> يضيف المختص <mark class="hl">الحمض المركّز تدريجيًا على جدار الإناء المحتوي على الماء</mark> ليستوعب الماء الحرارة.</div>
+              <div class="mmap-node"><b>✗ خطورة العكس:</b> صبّ الماء فوق الحمض يسبّب <b>غليانًا فوريًا عنيفًا وتناثر رذاذ الحمض الحارق</b>.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="train-box">
+          <div class="train-head"><span>✎ تدريب ١٠ (قرار إسعافي تطبيقي)</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>لاعب مصاب بالتواء وتورّم في الكاحل، وزميله مصاب بشدّ عضلي. حدّد نوع الكمّادة واسم الملح المناسب لكلٍّ منهما:</div>
+            <div class="ans-pad"><div class="pad-line"></div></div>
+          </div>
+        </div>
+
+        
+    <div class="ar-gateway">
+      <a class="qr-box" href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=packs" target="_blank" rel="noopener" title="افتح التجربة التفاعلية ثلاثية الأبعاد">
+        <img src="./targets/qr-packs.png" alt="كود المعمل التفاعلي">
+        <span>امسح أو اضغط</span>
+      </a>
+      <div class="ar-gw-body">
+        <div class="ar-gw-eyebrow">✦ بوابة «مَعْمَل» المجسّمة (WebAR + 360° VR) • التجربة بتطلع من المذكرة قطعةً قطعة!</div>
+        <div class="ar-gw-title"><a href="https://initiatives-drain-casting-rep.trycloudflare.com/?exp=packs" target="_blank" rel="noopener">تجربة مَعْمَل المجسّمة: الكمّادات الفورية والمحاكاة الآمنة ← افتح التجربة مباشرة</a></div>
+        <div class="ar-gw-sub">اختبر استجابة الوعاء الدموي للكمّادة وشاهد تنقيط الحمض الآمن في 3D — وجّه كاميرا الموبايل للرسمة أعلاه لتخرج التجربة ثلاثية الأبعاد من الورقة!</div>
+      </div>
+    </div>
+    
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١١ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-explain">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٢</span>
+          <span class="pill-cat">خريطة مصوّرة • الحياة والبيئة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>من كوباية الصودا وكفّ إيدك.. لحد ترشيد الوقود والمصانع!</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-explain" aria-hidden="true"><span>خرائط وتدريبات</span></div>
+    
+      <div class="pg-body">
+        <div class="mmap-tree butter">
+          <div style="display:grid;grid-template-columns:46mm 1fr 56px;gap:2.8mm;align-items:center">
+            <img src="./img/story-1.jpg" alt="سلمى ويونس والكمادات" style="width:46mm;height:28mm;object-fit:cover;border-radius:2.6mm;border:0.65mm solid #1b1336">
+            <div>
+              <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:12.6pt;color:#21143b;margin-bottom:1mm">◈ ١. سلسلة المشروب الغازي والانتفاخ (<span class="chem">CO₂</span>)</div>
+              <div class="chain-row">
+                <span class="chain-chip">مشروب بارد به <span class="chem">CO₂</span> مذاب</span>
+                <span class="chain-arr">⟵</span>
+                <span class="chain-chip accent-gold">يسخن بالمعدة فتقلّ ذوبانية الغاز</span>
+                <span class="chain-arr">⟵</span>
+                <span class="chain-chip accent-red">خروج الغاز ويرتبط <b>بإمكانية الشعور المؤقت بالانتفاخ</b></span>
+              </div>
+            </div>
+            
+    <svg viewBox="0 0 84 84" width="56" height="56" class="spot-svg" aria-hidden="true">
+      <circle cx="42" cy="42" r="39" fill="#ffe8c2" stroke="#1b1336" stroke-width="2.4"/>
+      <rect x="31" y="22" width="22" height="50" rx="8" fill="#d9483b" stroke="#1b1336" stroke-width="2.2"/>
+      <rect x="35" y="14" width="14" height="9" rx="3" fill="#ffcb44" stroke="#1b1336" stroke-width="2"/>
+      <circle cx="38" cy="10" r="3" fill="#fff" stroke="#1b1336" stroke-width="1.5"/>
+      <circle cx="47" cy="7" r="4" fill="#fff" stroke="#1b1336" stroke-width="1.5"/>
+      <circle cx="38" cy="48" r="3" fill="#ffd8c4"/><circle cx="45" cy="58" r="2.8" fill="#ffd8c4"/><circle cx="42" cy="37" r="3.2" fill="#ffd8c4"/>
+    </svg>
+    
+          </div>
+        </div>
+
+        <div class="vs-board">
+          <div class="mmap-tree exo">
+            <div class="mmap-hub"><span>▼ كحول مطهّر على اليد</span><span class="mmap-hub-sub">برودة</span></div>
+            <div class="card-with-illo">
+              
+    <svg viewBox="0 0 92 92" width="60" height="60" class="spot-svg" aria-hidden="true">
+      <circle cx="46" cy="46" r="42" fill="#d4f5ff" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M26 30 L66 30 L61 74 Q60 78 55 78 L37 78 Q32 78 31 74 Z" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M29 48 L63 48 L60 73 L32 73 Z" fill="#4cc9f0"/>
+      <rect x="50" y="14" width="7" height="48" rx="3.5" fill="#fff" stroke="#1b1336" stroke-width="2"/>
+      <rect x="52" y="42" width="3" height="18" fill="#0077b6"/>
+      <circle cx="53.5" cy="62" r="5.5" fill="#0077b6" stroke="#1b1336" stroke-width="2"/>
+      <path d="M10 38 L21 44 M10 58 L21 54 M82 38 L71 44 M82 58 L71 54" stroke="#0077b6" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    
+              <div class="mmap-branches">
+                <div class="mmap-node">يمتص السائل المتطاير حرارة من الجلد ليتبخّر ⟵ <mark class="hl">تبخّر ماص للحرارة</mark>.</div>
+              </div>
+            </div>
+          </div>
+          <div class="vs-badge-col"><div class="vs-circle">VS</div></div>
+          <div class="mmap-tree endo">
+            <div class="mmap-hub"><span>▲ مسحوق غسيل بالماء</span><span class="mmap-hub-sub">دفء</span></div>
+            <div class="card-with-illo">
+              
+    <svg viewBox="0 0 92 92" width="60" height="60" class="spot-svg" aria-hidden="true">
+      <circle cx="46" cy="46" r="42" fill="#ffe0d4" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M26 30 L66 30 L61 74 Q60 78 55 78 L37 78 Q32 78 31 74 Z" fill="#ffffff" stroke="#1b1336" stroke-width="2.5"/>
+      <path d="M29 48 L63 48 L60 73 L32 73 Z" fill="#ff7b54"/>
+      <rect x="50" y="14" width="7" height="48" rx="3.5" fill="#fff" stroke="#1b1336" stroke-width="2"/>
+      <rect x="52" y="22" width="3" height="38" fill="#e63946"/>
+      <circle cx="53.5" cy="62" r="5.5" fill="#e63946" stroke="#1b1336" stroke-width="2"/>
+      <path d="M16 42 L8 36 M16 56 L7 58 M76 42 L84 36 M76 56 L85 58" stroke="#d93829" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    
+              <div class="mmap-branches">
+                <div class="mmap-node">يطلق ذوبان حبيبات المسحوق طاقة حرارية لليد ⟵ <mark class="hl">ذوبان طارد للحرارة</mark>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mmap-tree lav">
+          <div class="mmap-hub"><span>✦ تدريب بحثي: مدفأة الجيب متعدّدة الاستخدام (أسيتات الصوديوم <span class="chem" style="color:#fff">CH₃COONa</span>)</span></div>
+          <div class="card-with-illo">
+            
+    <svg viewBox="0 0 84 84" width="56" height="56" class="spot-svg" aria-hidden="true">
+      <circle cx="42" cy="42" r="39" fill="#e5dbff" stroke="#1b1336" stroke-width="2.4"/>
+      <rect x="18" y="24" width="48" height="36" rx="12" fill="#ff8c42" stroke="#1b1336" stroke-width="2.3"/>
+      <circle cx="42" cy="42" r="9" fill="#e2e8f0" stroke="#1b1336" stroke-width="2"/>
+      <path d="M38 42 L46 42 M42 38 L42 46" stroke="#1b1336" stroke-width="2"/>
+    </svg>
+    
+            <div style="flex:1;display:flex;flex-direction:column;gap:1mm">
+              <div class="chain-row">
+                <span class="chain-chip accent-red">ثني القرص ⟵ تبلور المحلول فوق المشبع لصلب (طارد/دفء)</span>
+                <span class="chain-arr">⇄</span>
+                <span class="chain-chip accent-mint">ماء ساخن ⟵ انصهار البلّورات (إعادة شحن)</span>
+              </div>
+              <div style="font-size:10.8pt;font-weight:700"><b>قارن في سطر:</b> سبب انطلاق الحرارة في كمّادة <span class="chem">MgSO₄</span> مقابل مدفأة أسيتات الصوديوم:</div>
+              <div class="ans-pad"><div class="pad-line"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="train-box grow-box">
+          <div class="train-head"><span>✦ تدريب ومناقشة: الطاقة الحرارية والوقود والبيئة</span><span class="train-tag">الإجابة ص ٢٠</span></div>
+          <div class="train-body">
+            <div>لتقليل فقد الحرارة في الثلاجات والمباني والمصانع وخفض حرق الوقود والانبعاثات، اقترح إجراءين عمليين:</div>
+            <div class="grid-2" style="flex:1">
+              <div class="train-cell" style="background:#e6faf6;border-color:#0c635c"><b>الإجراء العملي الأول:</b><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div><div class="pad-line"></div></div></div>
+              <div class="train-cell" style="background:#fff8df;border-color:#d97706"><b>الإجراء العملي الثاني:</b><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div><div class="pad-line"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٢ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">سلسلة «مَعْمَل» التعليمية التفاعلية • خرائط ذهنية وتجارب ثلاثية الأبعاد</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page" id="p13">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-qbank">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٣</span>
+          <span class="pill-cat">بنك أسئلة الدرس (١ / ٥)</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>اختبر فهمك وتطبيقك • الأسئلة من ١ إلى ٤</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-qbank" aria-hidden="true"><span>بنك الأسئلة</span></div>
+    
+      <div class="pg-body">
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١</span><span class="q-type">اختر الإجابة</span><span>أيّ العمليات الفيزيائية التالية تُعدّ عملية طاردة للحرارة؟</span></div>
+          <div class="q-body">
+            <div class="mcq-row">
+              <div class="mcq-opt">أ) تسامي اليود الصلب</div>
+              <div class="mcq-opt">ب) انصهار الجليد</div>
+              <div class="mcq-opt">ج) تكثّف أبخرة البروم</div>
+              <div class="mcq-opt">د) تبخّر الكحول من اليد</div>
+            </div>
+            <div style="font-size:10.4pt;font-weight:700;color:#3d2566">سبب اختيارك باختصار: ..............................................................................................................</div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٢</span><span class="q-type">اقرأ رموز الحالة</span><span>تأمّل المعادلة الفيزيائية لقطعة الثلج الجاف: <span class="formula-hero" style="font-size:11.5pt;padding:0.2mm 2.8mm">CO₂(s) → CO₂(g)</span></span></div>
+          <div class="q-body">
+            <div style="font-size:10.8pt;font-weight:700">ما اسم هذا التحوّل الفيزيائي؟ وماذا تعني الرموز <span class="chem">(s)</span> و<span class="chem">(g)</span>؟ وهل العملية ماصّة أم طاردة للحرارة؟</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٣</span><span class="q-type">علّل علميًا</span><span>عند تدليك إحدى اليدين بالكحول المطهّر نشعر بالبرودة، بينما نشعر بالدفء عند غسل الأخرى بمسحوق الغسيل والماء.</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٤</span><span class="q-type">صحّح ما تحته خط</span><span>«عند غليان الماء السائل وتحوّله لبخار <u>تنكسر الروابط التساهمية داخل جزيء الماء</u> وتنطلق حرارة للوسط».</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٣ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">بنك أسئلة مَعْمَل • راجع إجاباتك في ص ١٨–١٩ بعد المحاولة بالقلم</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-qbank">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٤</span>
+          <span class="pill-cat">بنك أسئلة الدرس (٢ / ٥)</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>اختبر فهمك وتطبيقك • الأسئلة من ٥ إلى ٨</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-qbank" aria-hidden="true"><span>بنك الأسئلة</span></div>
+    
+      <div class="pg-body">
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٥</span><span class="q-type">رتّب وحدّد</span><span>رتّب مراحل دورة التبريد في الثلاجة بدءًا من دخول سائل التبريد للفريزر، وحدّد مرحلة طرد الحرارة:</span></div>
+          <div class="q-body">
+            <div style="font-size:10.8pt;font-weight:700">( الضغط بالموتور &nbsp;/&nbsp; التكثّف في الشبكة الخلفية &nbsp;/&nbsp; التمدّد والتبخّر عبر الصمام الضيق )</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٦</span><span class="q-type">قارن بدقة</span><span>فرّق بين «التغيّر في درجة الحرارة» و«كمية الطاقة الحرارية» من حيث المفهوم ووحدة القياس الدولية.</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٧</span><span class="q-type">علّل + حدود النظام</span><span>في تجربة قياس حرارة ذوبان كلوريد الكالسيوم في الماء، استُخدم كوبان متداخلان من البولي إستيرين وترمومتر.</span></div>
+          <div class="q-body">
+            <div style="font-size:10.8pt;font-weight:700">١) حدّد «النظام» و«الوسط المحيط». &nbsp;&nbsp; ٢) علّل استخدام كوبين متداخلين بدل كوب واحد.</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٨</span><span class="q-type">احسب بالرموز</span><span>عند إذابة عيّنة من <span class="chem">CaCl₂</span> في الماء كانت قراءة البداية <span class="chem">T₁ = 20 °C</span> وأصبحت قراءة النهاية <span class="chem">T₂ = 29 °C</span>.</span></div>
+          <div class="q-body">
+            <div style="font-size:10.8pt;font-weight:700">اكتب قانون التغيّر الحراري واحسب <span class="chem">ΔT</span> بإشارته، وحدّد اتجاه انتقال الحرارة بين النظام والوسط:</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٤ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">بنك أسئلة مَعْمَل • راجع إجاباتك في ص ١٨–١٩ بعد المحاولة بالقلم</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-qbank">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٥</span>
+          <span class="pill-cat">بنك أسئلة الدرس (٣ / ٥)</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>اختبر فهمك وتطبيقك • الأسئلة من ٩ إلى ١٢</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-qbank" aria-hidden="true"><span>بنك الأسئلة</span></div>
+    
+      <div class="pg-body">
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٩</span><span class="q-type">اختر الإجابة</span><span>جميع المواد التالية يؤدّي ذوبانها في الماء إلى انخفاض درجة حرارة المحلول (<span class="chem">T₂ &lt; T₁</span>) <u>ما عدا</u>:</span></div>
+          <div class="q-body">
+            <div class="mcq-row">
+              <div class="mcq-opt">أ) نترات الأمونيوم</div>
+              <div class="mcq-opt">ب) كبريتات البوتاسيوم</div>
+              <div class="mcq-opt">ج) كلوريد الليثيوم اللامائي</div>
+              <div class="mcq-opt">د) بيكربونات الصوديوم</div>
+            </div>
+            <div style="font-size:10.4pt;font-weight:700;color:#3d2566">سبب اختيارك باختصار: ..............................................................................................................</div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٠</span><span class="q-type">اكتب الصيغة الكيميائية</span><span>بلّورات كبريتات النحاس المائية زرقاء وتصبح بيضاء بعد نزع ماء التبلور. اكتب صيغة البلّورات الزرقاء وصيغة الناتج الأبيض.</span></div>
+          <div class="q-body">
+            <div class="grid-2">
+              <div class="train-cell" style="background:#e8f8ff;border-color:#0e6ba8"><b>صيغة البلّورات الزرقاء (المائية):</b><div>................................................</div></div>
+              <div class="train-cell" style="background:#fff8df;border-color:#d97706"><b>صيغة الناتج الأبيض (اللامائي):</b><div>................................................</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١١</span><span class="q-type">استنتج المادة المجهولة</span><span>مسحوق ملح جاف لونه <b>أزرق</b>؛ عند تعريضه لقطرات ماء تحوّل لونه إلى <b>الوردي</b> مع انطلاق حرارة طفيفة.</span></div>
+          <div class="q-body">
+            <div style="font-size:10.8pt;font-weight:700">١) استنتج اسم وصيغة الملح الأزرق قبل إضافة الماء وبعدها. &nbsp; ٢) كيف نُعيده للّون الأزرق مرّة أخرى؟</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٢</span><span class="q-type">قارن وفسّر</span><span>أُذيب ٢ جم من <span class="chem">CuSO₄</span> اللامائية في الكوب (١)، و٢ جم من <span class="chem">CuSO₄·5H₂O</span> المائية في الكوب (٢) بنفس حجم الماء.</span></div>
+          <div class="q-body">
+            <div style="font-size:10.8pt;font-weight:700">قارن بين الكوبين من حيث تغيّر قراءة الترمومتر ونوع الذوبان، وما الفرق بين هذه التجربة وتسخين البلّورة الجافة؟</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٥ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">بنك أسئلة مَعْمَل • راجع إجاباتك في ص ١٨–١٩ بعد المحاولة بالقلم</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-qbank">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٦</span>
+          <span class="pill-cat">بنك أسئلة الدرس (٤ / ٥)</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>اختبر فهمك وتطبيقك • الأسئلة من ١٣ إلى ١٦</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-qbank" aria-hidden="true"><span>بنك الأسئلة</span></div>
+    
+      <div class="pg-body">
+        <div class="q-card" style="flex:1.6">
+          <div class="q-top"><span class="q-num">س ١٣</span><span class="q-type">جدول وترتيب</span><span>أُذيبت أربع عيّنات متساوية الكتلة في حجوم متماثلة من الماء تحت نفس ظروف القياس، فكانت القراءات كالتالي:</span></div>
+          <div class="q-body">
+            <table class="k-table">
+              <thead>
+                <tr>
+                  <th>العينة</th>
+                  <th>درجة البداية (°س)</th>
+                  <th>درجة النهاية (°س)</th>
+                  <th>التغيّر (°س)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><b>أ</b></td><td>٢٤</td><td>١٨</td><td>……</td></tr>
+                <tr><td><b>ب</b></td><td>١٩</td><td>١٦</td><td>……</td></tr>
+                <tr><td><b>ج</b></td><td>٢٢</td><td>٢٦</td><td>……</td></tr>
+                <tr><td><b>د</b></td><td>٢٣</td><td>٢٢</td><td>……</td></tr>
+              </tbody>
+            </table>
+            <div style="font-size:10.8pt;font-weight:700">رتّب العينات <b>الماصّة للحرارة فقط</b> بدءًا بالأكبر امتصاصًا عند تماثل الكميات والظروف: ....................................................</div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٤</span><span class="q-type">احسب بالتناسب</span><span>عند إذابة ٥ جم من كبريتات البوتاسيوم في كوب ماء معزول كان <span class="chem">ΔT = −0.8 °C</span>. احسب <span class="chem">ΔT</span> عند إذابة ١٥ جم في نفس حجم الماء.</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٥</span><span class="q-type">استخرج غير المناسب</span><span>( هيدروكسيد الصوديوم / كلوريد الكالسيوم / نترات الأمونيوم / كربونات الصوديوم ) — استخرج المختلف واربط الباقي:</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٦</span><span class="q-type">حدّد المتغيّرات</span><span>في تجربة قياس أثر تغيير كتلة الملح المذاب على التغيّر في درجة حرارة ٥٠ مل ماء: حدّد المستقل والتابع وضابطًا واحدًا.</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٦ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">بنك أسئلة مَعْمَل • راجع إجاباتك في ص ١٨–١٩ بعد المحاولة بالقلم</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-qbank">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٧</span>
+          <span class="pill-cat">بنك أسئلة الدرس (٥ / ٥)</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>اختبر فهمك وتطبيقك • الأسئلة من ١٧ إلى ٢٠</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-qbank" aria-hidden="true"><span>بنك الأسئلة</span></div>
+    
+      <div class="pg-body">
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٧</span><span class="q-type">أمان معملي (علّل)</span><span>يحذّر المختص في المعمل بشدّة من صبّ الماء فوق الحمض المركّز، ويضيف الحمض المركّز تدريجيًا على جدار الإناء المحتوي على الماء. فسّر ذلك علميًا.</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٨</span><span class="q-type">قارن تطبيقيًا</span><span>قارن بين «كمّادة الضغط الفورية الباردة» و«الكمّادة الفورية الساخنة» من حيث: الملح المستخدم، ونوع الذوبان، وتأثيرها على الأوعية الدموية.</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ١٩</span><span class="q-type">فسّر المشاهدة</span><span>لماذا يفور المشروب الغازي بقوة أكبر إذا كانت الزجاجة دافئة؟ وما علاقة خروج الغاز المذاب بالشعور المؤقت بالانتفاخ بعد شربه؟</span></div>
+          <div class="q-body"><div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top"><span class="q-num">س ٢٠</span><span class="q-type">مسألة تفكير وتكامل</span><span>أُذيب ٣ جم من ملح مجهول (X) في <span class="chem">40 mL</span> ماء حرارته <span class="chem">T₁ = 23 °C</span> فأصبحت <span class="chem">T₂ = 17 °C</span>.</span></div>
+          <div class="q-body">
+            <div style="font-size:10.6pt;font-weight:700">١) احسب <span class="chem">ΔT</span> بإشارته. &nbsp; ٢) هل يصلح الملح (X) لكمّادة باردة أم دافئة؟ &nbsp; ٣) كم تصبح <span class="chem">T₂</span> لو أذبنا ٦ جم منه في نفس حجم الماء؟</div>
+            <div class="ans-pad"><div class="pad-line"></div><div class="pad-line"></div></div>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٧ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">انتهت صفحات الطالب (ص ١–١٧) • الصفحات ١٨–٢٠ مخصّصة لنموذج الإجابة والتصحيح</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page" id="p18">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-key">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٨</span>
+          <span class="pill-cat">نموذج الإجابة (١ / ٣) • للمعلّم والمراجعة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>مفتاح إجابات بنك الأسئلة بالخطوات (س ١ إلى س ١٠)</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-key" aria-hidden="true"><span>نموذج الإجابة</span></div>
+    
+      <div class="pg-body">
+        <div class="q-opener">
+          <b>إرشاد التوزيع الصفي:</b> يُوزّع المعلّم الصفحات <b>ص ١–١٧</b> على الطلاب للشرح والتطبيق، ويحتفظ بالصفحات <b>ص ١٨–٢٠</b> للتصحيح السريع أو المراجعة الذاتية.
+        </div>
+        <div class="ans-grid">
+          <div class="ans-item"><div><b>س ١:</b> (ج) <b>تكثّف أبخرة البروم</b>؛ لأن التكثّف تحوّل من غاز لسائل يفقد فيه البخار طاقة حرارية للوسط، بينما الانصهار والتسامي والتبخّر عمليات ماصّة.</div></div>
+          <div class="ans-item"><div><b>س ٢:</b> العملية هي <b>التسامي</b>؛ الرمز <span class="chem">(s)</span> يعني الحالة الصلبة و<span class="chem">(g)</span> الحالة الغازية؛ وهي عملية <b>ماصّة للحرارة</b> تمتص طاقة من الوسط دون المرور بالحالة السائلة.</div></div>
+          <div class="ans-item"><div><b>س ٣:</b> تبخّر الكحول المطهّر عملية <b>ماصّة للحرارة</b> تسحب طاقة حرارية من الجلد فنشعر بالبرودة، بينما ذوبان مسحوق الغسيل في الماء عملية <b>طاردة للحرارة</b> تطلق طاقة لليد فنشعر بالدفء.</div></div>
+          <div class="ans-item"><div><b>س ٤:</b> التصويب: عند غليان الماء وتبخّره <b>تضعف قوى التجاذب وتتباعد الجزيئات دون انكسار الروابط التساهمية داخل جزيء <span class="chem">H₂O</span>، وتُمتص حرارة من الوسط المحيط</b>.</div></div>
+          <div class="ans-item"><div><b>س ٥:</b> الترتيب: <b>١) التمدّد والتبخّر</b> عبر الصمام الضيق ← <b>٢) الضغط</b> بالموتور (الضاغط) ← <b>٣) التكثّف</b> في الشبكة الخلفية. وتُطلَق الحرارة للهواء في مرحلة <b>التكثّف</b> بالشبكة الخلفية.</div></div>
+          <div class="ans-item"><div><b>س ٦:</b> <b>التغيّر في درجة الحرارة:</b> مقياس لتغيّر سخونة أو برودة الجسم ويرتبط بمتوسط طاقة حركة الدقائق ووحدته <b>(°س / <span class="chem">°C</span>)</b>. <b>كمية الحرارة:</b> الطاقة الحرارية المنتقلة بين النظام والوسط ووحدتها <b>الجول (<span class="chem">J</span>)</b>.</div></div>
+          <div class="ans-item"><div><b>س ٧:</b> ١) <b>النظام:</b> محلول كلوريد الكالسيوم (الملح المذاب + الماء). <b>الوسط المحيط:</b> الكوب والترمومتر والهواء الملامس. ٢) <b>التعليل:</b> لزيادة العزل الحراري ومنع تبادل الحرارة مع الهواء الخارجي فتكون القراءة دقيقة.</div></div>
+          <div class="ans-item"><div><b>س ٨:</b> القانون: <span class="chem">ΔT = T₂ − T₁ = 29 − 20 = +9 °C</span> (موجب ٩ °س). الإشارة الموجبة تدل على <b>ذوبان طارد للحرارة</b>، أي انتقلت الطاقة الحرارية <b>من النظام إلى الوسط المحيط</b>.</div></div>
+          <div class="ans-item"><div><b>س ٩:</b> (ج) <b>كلوريد الليثيوم اللامائي <span class="chem">LiCl</span></b>؛ لأن ذوبانه طارد للحرارة يرفع درجة حرارة المحلول، بينما باقي الاختيارات أملاح ذوبانها ماص.</div></div>
+          <div class="ans-item"><div><b>س ١٠:</b> صيغة البلّورات الزرقاء (المائية): <span class="chem">CuSO₄·5H₂O</span> ، ثم صيغة الناتج الأبيض (اللامائي): <span class="chem">CuSO₄</span>.</div></div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٨ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">مفتاح إجابات بنك الأسئلة (س ١ – س ١٠)</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-key">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">١٩</span>
+          <span class="pill-cat">نموذج الإجابة (٢ / ٣) • للمعلّم والمراجعة</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>مفتاح إجابات بنك الأسئلة بالخطوات (س ١١ إلى س ٢٠)</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-key" aria-hidden="true"><span>نموذج الإجابة</span></div>
+    
+      <div class="pg-body">
+        <div class="ans-grid">
+          <div class="ans-item"><div><b>س ١١:</b> ١) قبل الماء: <b>كلوريد الكوبلت اللامائي <span class="chem">CoCl₂</span></b> (أزرق)؛ وبعد الماء: <b>كلوريد الكوبلت المائي المتهدرت <span class="chem">CoCl₂·6H₂O</span></b> (وردي). ٢) نُعيده للأزرق <b>بالتسخين</b> لنزع ماء التبلور (ماص).</div></div>
+          <div class="ans-item"><div><b>س ١٢:</b> الكوب (١) به <span class="chem">CuSO₄</span> لا مائية ذوبانها <b>طارد</b> فترتفع قراءة الترمومتر؛ الكوب (٢) به <span class="chem">CuSO₄·5H₂O</span> مائية ذوبانها <b>ماص</b> فتنخفض القراءة. في الكوبين تكوّن <b>محلول</b>، أمّا تسخين البلّورة الجافة فيُفقدها ماء التبلور دون ذوبان.</div></div>
+          <div class="ans-item" style="grid-column: span 2; background:#ffe8cc; border-right-color:#b82518">
+            <div>
+              <b>س ١٣ (جدول العينات ص ١٦):</b> حساب <span class="chem">ΔT = T₂ − T₁</span> لكل عينة:<br>
+              • العينة <b>أ</b>: <span class="chem">18 − 24 = −6 °C</span> (<b>سالب ٦ °س</b> — ماص) &nbsp;|&nbsp;
+              • العينة <b>ب</b>: <span class="chem">16 − 19 = −3 °C</span> (<b>سالب ٣ °س</b> — ماص) &nbsp;|&nbsp;
+              • العينة <b>ج</b>: <span class="chem">26 − 22 = +4 °C</span> (<b>موجب ٤ °س</b> — طارد، تُستبعد من الماصّة) &nbsp;|&nbsp;
+              • العينة <b>د</b>: <span class="chem">22 − 23 = −1 °C</span> (<b>سالب ١ °س</b> — ماص).<br>
+              <b>ترتيب العينات الماصّة بدءًا بالأكبر امتصاصًا للحرارة:</b> <b>أ ثم ب ثم د</b> (لأن مقدار الانخفاض ٦ &gt; ٣ &gt; ١ °س عند تماثل الكميات والظروف).
+            </div>
+          </div>
+          <div class="ans-item"><div><b>س ١٤:</b> بما أن الكتلة تضاعفت ٣ مرّات (من ٥ جم إلى ١٥ جم) في نفس حجم الماء، يتضاعف التغيّر طرديًا ٣ مرّات: <span class="chem">ΔT = 3 × (−0.8) = −2.4 °C</span> (سالب ٢٫٤ °س).</div></div>
+          <div class="ans-item"><div><b>س ١٥:</b> المختلف هو <b>نترات الأمونيوم</b> (لأن ذوبانه ماص للحرارة)، والربط بين الباقي: <b>مواد ذوبانها في الماء طارد للحرارة</b>.</div></div>
+          <div class="ans-item"><div><b>س ١٦:</b> <b>المتغيّر المستقل:</b> كتلة الملح المذاب. <b>المتغيّر التابع:</b> مقدار التغيّر في درجة الحرارة (<span class="chem">ΔT</span>). <b>المتغيّر الضابط (الثابت):</b> حجم الماء (٥٠ مل) ونوع الملح والعزل.</div></div>
+          <div class="ans-item"><div><b>س ١٧:</b> لأن تخفيف الحمض المركّز طارد جدًا للحرارة؛ فإضافة الماء فوق الحمض تطلق حرارة كبيرة فجأة تسبّب غليانًا فوريًا عنيفًا للماء وتناثر رذاذ الحمض الحارق، بينما تنقيط الحمض تدريجيًا على جدار الإناء المحتوي على ماء يجعل الماء يمتص الحرارة بأمان.</div></div>
+          <div class="ans-item"><div><b>س ١٨:</b> <b>الباردة:</b> ملح نترات الأمونيوم <span class="chem">NH₄NO₃</span>، ذوبان ماص، تضيّق الأوعية الدموية لتخفيف التورّم. <b>الساخنة:</b> ملح كبريتات الماغنسيوم <span class="chem">MgSO₄</span>، ذوبان طارد، توسّع الأوعية الدموية لتخفيف إجهاد العضلات.</div></div>
+          <div class="ans-item"><div><b>س ١٩:</b> ارتفاع الحرارة يقلّل ذوبانية غاز <span class="chem">CO₂</span> في السائل فيخرج سريعًا؛ وعند دخوله المعدة الدافئة يتحرر الغاز المذاب ممّا قد يسبّب <b>شعورًا مؤقتًا بالانتفاخ</b>.</div></div>
+          <div class="ans-item" style="grid-column: span 2; background:#d6f9f2; border-right-color:#0c635c"><div><b>س ٢٠:</b> ١) <span class="chem">ΔT = 17 − 23 = −6 °C</span> (سالب ٦ °س). &nbsp; ٢) يصلح لصنع <b>كمّادة باردة</b> لأن ذوبانه ماص للحرارة. &nbsp; ٣) عند مضاعفة الكتلة لـ ٦ جم يصبح <span class="chem">ΔT = −12 °C</span>، فتصبح درجة النهاية <span class="chem">T₂ = 23 − 12 = 11 °C</span> (١١ °س).</div></div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ١٩ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">مفتاح إجابات بنك الأسئلة (س ١١ – س ٢٠)</span>
+    </footer>
+    
+    </section>
+    
+    <section class="page">
+      
+    
+    <div class="wm-layer" aria-hidden="true">
+      <div class="wm-stamp wm-top">عيّنة عرض للمعلّم • مَعْمَل</div>
+      <div class="wm-stamp wm-center">عيّنة • مَعْمَل</div>
+      <div class="wm-stamp wm-bot">نسخة عيّنة • مَعْمَل للعلوم</div>
+    </div>
+    
+    <header class="pg-head mode-key">
+      <div class="pg-topbar">
+        <div class="pg-topbar-right">
+          <span class="pg-chip-num">٢٠</span>
+          <span class="pill-cat">نموذج الإجابة (٣ / ٣) • التدريبات ودليل المعلّم</span>
+          <span class="sample-pill">عيّنة</span>
+        </div>
+        <span class="brand-badge">⚗ مذكرة «مَعْمَل» التفاعلية • تانية إعدادي • الترم التاني</span>
+      </div>
+      <div class="hero-title-band">
+        <div class="st-sub">الوحدة الأولى • الدرس الأول: التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية</div>
+        <h1>مفتاح إجابات تدريبات الدرس (ص ٢–١٢) • منظومة «مَعْمَل» التفاعلية</h1>
+      </div>
+    </header>
+    <div class="unit-tab mode-key" aria-hidden="true"><span>نموذج الإجابة</span></div>
+    
+      <div class="pg-body">
+        <div class="ans-grid">
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ١ (ص ٢):</b> ١) التسامي — ماصّة للحرارة. ٢) التكثّف — مصدر القطرات هو <b>بخار الماء في الهواء المحيط</b> عندما لامس السطح البارد.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٢ (ص ٣):</b> ١) تُمتص بالفريزر (مرحلة ١)، وتُطلَق بالشبكة الخلفية (مرحلة ٣). ٢) تسخن الغرفة لأن الموتور يعمل باستمرار ويطرد حرارة إضافية للمطبخ.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٣ (ص ٤):</b> ١) النظام: محلول هيدروكسيد الصوديوم؛ الوسط: الكوب والترمومتر والهواء. ٢) السهم من <b>[النظام] ⟵ إلى [الوسط المحيط]</b>.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٤ (ص ٥):</b> الصواب: <span class="chem">ΔT = T₂ − T₁ = 17 − 22 = −5 °C</span> (سالب ٥ °س)، وبما أن الإشارة سالبة فالذوبان <b>ماص للحرارة</b>.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٥ (ص ٦):</b> ١) <span class="chem">T₁ = 25 °C</span> ، <span class="chem">T₂ = 18 °C</span>. ٢) <span class="chem">ΔT = 18 − 25 = −7 °C</span> (سالب ٧ °س). ٣) ذوبان <b>ماص</b> لأن الإشارة سالبة. ٤) من الماء والترمومتر للذوبان.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٦ (ص ٧):</b> ١) التي ترفع الحرارة <b>كربونات الصوديوم</b> (طارد)، والتي تخفضها <b>بيكربونات الصوديوم</b> (ماص). ٢) <span class="chem">LiCl</span> اللامائي لأنه طارد.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٧ (ص ٨):</b> اكتسبت بلّورات <span class="chem">CoCl₂</span> الزرقاء ماء التبلور فتحوّلت إلى <span class="chem">CoCl₂·6H₂O</span> الوردي، وهو تفاعل <b>طارد للحرارة</b>.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ٨ (ص ٩):</b> ١) تضاعف الارتفاع للضعف (من ٤٫٥ إلى ٩ °س). ٢) عند ١٫٥ جم = <b>٦٫٧٥ °س</b>. ٣) طارد للحرارة، وثبّتنا حجم الماء لضبط التجربة.</div></div>
+          <div class="ans-item" style="grid-column: span 2; background:#d6f9f2; border-right-color:#0c635c; font-size:9.6pt">
+            <div><b>تدريب ٩ (ص ١٠ — جدول ورسم <span class="chem">LiCl</span>):</b> الفروق: ١ جم = <b>+٤٫٥ °س</b>، ٢ جم = <b>+٩ °س</b>، ٣ جم = <b>+١٣٫٥ °س</b>، ٤ جم = <b>+١٨ °س</b> (خط مستقيم يمر بنقطة الأصل = علاقة طردية). • <b>التنبؤ عند ٦ جم:</b> <span class="chem">ΔT = +27 °C</span> (٢٧ °س)، وتصبح <span class="chem">T₂ = 21 + 27 = 48 °C</span> (٤٨ °س).</div>
+          </div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>تدريب ١٠ (ص ١١):</b> للكاحل المتورّم: <b>كمّادة باردة (<span class="chem">NH₄NO₃</span>)</b> لتضييق الأوعية؛ وللشد العضلي: <b>كمّادة ساخنة (<span class="chem">MgSO₄</span>)</b> لتوسيع الأوعية.</div></div>
+          <div class="ans-item" style="font-size:9.6pt"><div><b>التدريب البحثي والمناقشة (ص ١٢):</b> في <span class="chem">MgSO₄</span> من <b>الذوبان</b>، وفي أسيتات الصوديوم من <b>التبلور</b>. • الترشيد: عزل الثلاجات والمباني وتدوير حرارة المصانع.</div></div>
+        </div>
+
+        <div class="mmap-tree lav" style="background:linear-gradient(110deg,#21143b 0%,#352060 100%); color:#fff; border-color:#ffcb44; padding:2mm 3.4mm">
+          <div style="font-family:KDisplay,sans-serif;font-weight:900;font-size:11.6pt;color:#ffcb44">✦ لماذا صُمّمت مذكرة «مَعْمَل» بنظام الخرائط الذهنية والتجارب المجسّمة؟ (بطاقة المعلّم)</div>
+          <div style="font-size:9.6pt;font-weight:700;line-height:1.42;color:#f3edff">
+            تستبدل منظومة <b>«مَعْمَل»</b> النصوص الطويلة المرهقة بـ <b>خرائط ذهنية ومخططات سبب ⟵ نتيجة وتدريبات فورية</b> ترسخ في الذاكرة البصرية، مدعومةً بغرفة واقع معزّز وافتراضي تخرج فيها التجربة من الورقة قطعةً قطعة — ليمتلك المعلّم أقوى أداة شرح وتفاعل داخل الفصل والبيت.
+          </div>
+        </div>
+      </div>
+      
+    <footer class="pg-foot">
+      <div class="pg-foot-right">
+        <span class="pg-num">صفحة ٢٠ من ٢٠</span>
+        <span class="pg-foot-brand">⚗ مَعْمَل</span>
+      </div>
+      <span class="pg-foot-note">تمّ بحمد الله العدد الأول (٢٠ صفحة) • منظومة «مَعْمَل» التعليمية التفاعلية</span>
+    </footer>
+    
+    </section>
+    
+</body>
+</html>

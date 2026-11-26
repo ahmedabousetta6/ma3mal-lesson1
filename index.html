@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1438">
+  <link rel="icon" href="data:,">
+  <title>مَعْمَل | الحرارة رايحة فين؟ — مذكرة الدرس الأول والغرفة التفاعلية ثلاثية الأبعاد (AR / VR)</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js",
+      "three/addons/": "./vendor/addons/",
+      "mindar-image-three": "./vendor/mindar-image-three.prod.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="ar-viewport" aria-label="عرض كاميرا الواقع المعزز"></div>
+  <canvas id="vr-canvas" hidden aria-label="غرفة الواقع الافتراضي ثلاثية الأبعاد"></canvas>
+  <div id="stereo-divider" class="stereo-divider" hidden aria-hidden="true"></div>
+
+  <!-- Welcome Hub -->
+  <section id="welcome-screen" class="overlay-screen">
+    <div class="welcome-card">
+      <div class="pill-row">
+        <span class="badge gold">الدرس الأول كاملًا • ٢٠ صفحة A4</span>
+        <span class="badge mint">واقع معزّز AR + غرفة واقع افتراضي VR</span>
+      </div>
+      <h1>الحرارة رايحة فين؟</h1>
+      <p class="lead">
+        مجلة الدرس الأول <b>«التغيّرات الحرارية المصاحبة للتغيّرات الفيزيائية»</b> مدمجة مع معمل افتراضي ثلاثي الأبعاد يعمل فوق صفحات المجلة بالكاميرا أو داخل غرفة الواقع الافتراضي <span dir="ltr">360° VR</span>.
+      </p>
+
+      <div class="hub-grid">
+        <a class="hub-pdf-card" href="./pdf/kashf-lesson1-magazine-20p.pdf" target="_blank" rel="noopener">
+          <span class="hub-icon">📘</span>
+          <div>
+            <strong>تحميل مذكرة «مَعْمَل» — الدرس الأول (٢٠ صفحة PDF • عيّنة)</strong>
+            <span>الخرائط الذهنية + التدريبات + ٢٠ سؤالًا + مفتاح الإجابات الكامل للمعلّم (ص ١٨–٢٠)</span>
+          </div>
+        </a>
+        <a class="hub-pdf-card web-mag" href="./magazine.html" target="_blank" rel="noopener">
+          <span class="hub-icon">🖥</span>
+          <div>
+            <strong>تصفّح مذكرة «مَعْمَل» على الشاشة (لعرض الرسومات أمام كاميرا الموبايل)</strong>
+            <span>افتح الصفحات ٣، ٥، ٨، ١١ على شاشة الكمبيوتر ووجّه كاميرا هاتفك إليها!</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="approx-notice">
+        <strong>تنبيه علمي:</strong> النماذج ثلاثية الأبعاد تمثيل تعليمي تقريبي يوضّح حركة الجزيئات واتجاه انتقال الطاقة بصريًا دون قياسات رقمية مصطنعة.
+      </div>
+
+      <div class="welcome-actions">
+        <button id="btn-start-vr" class="btn primary-btn" type="button">
+          🥽 ادخل غرفة الواقع الافتراضي التفاعلية (360° VR Lab)
+        </button>
+        <button id="btn-start-ar" class="btn secondary-btn" type="button">
+          📷 شغّل كاميرا الواقع المعزّز فوق صفحات المجلة (WebAR)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Camera Error Modal -->
+  <section id="error-modal" class="overlay-screen" hidden>
+    <div class="welcome-card error-card" role="alert">
+      <span class="badge warn">تعذّر تشغيل الكاميرا</span>
+      <h2 id="error-title">لم نتمكن من الوصول إلى الكاميرا</h2>
+      <p id="error-message"></p>
+      <div class="welcome-actions">
+        <button id="btn-error-vr" class="btn primary-btn" type="button">
+          🥽 ادخل غرفة الواقع الافتراضي بدون كاميرا (VR Lab)
+        </button>
+        <button id="btn-error-retry" class="btn secondary-btn" type="button">
+          ↻ إعادة المحاولة بالكاميرا
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top HUD -->
+  <header id="hud-top" class="hud-top" hidden>
+    <div class="hud-top-row">
+      <div id="tracking-pill" class="tracking-pill scanning" role="status" aria-live="polite">
+        <span class="dot"></span>
+        <span id="tracking-text">غرفة المعمل الافتراضي 360°</span>
+      </div>
+      <div class="hud-top-actions">
+        <button id="btn-replay-emerge" class="chip-btn emerge-chip" type="button" title="أعد بناء المجسّم من صفحة المذكرة جزءًا جزءًا">⚙️ ابنِ من الصفحة</button>
+        <button id="btn-zoom-ar" class="chip-btn" type="button" hidden title="تكبير حجم المجسّم في الكاميرا">🔍 حجم المجسّم: كبير+</button>
+        <button id="btn-stereo" class="chip-btn" type="button" title="وضع نظارة الواقع الافتراضي المزدوج">👓 نظارة VR</button>
+        <button id="btn-switch-mode" class="chip-btn" type="button">📷 كاميرا AR</button>
+        <a href="./pdf/kashf-lesson1-magazine-20p.pdf" target="_blank" class="chip-btn link-chip">📘 المذكرة PDF</a>
+        <button id="btn-home" class="chip-btn icon-only" type="button" aria-label="الرئيسية">⌂</button>
+      </div>
+    </div>
+
+    <!-- 4 Magazine Station Tabs (Visible in 360 VR Mode) -->
+    <div id="station-tabs" class="lesson-switcher" hidden>
+      <button class="lesson-tab active" data-station="0" type="button">ص ٣: الماء والتلاجة</button>
+      <button class="lesson-tab" data-station="1" type="button">ص ٦: المسعر والأملاح</button>
+      <button class="lesson-tab" data-station="2" type="button">ص ٨: البلّورات</button>
+      <button class="lesson-tab" data-station="3" type="button">ص ١١: الكمّادات والأمان</button>
+    </div>
+
+    <div class="approx-pill">اسحب بإصبعك لتدوير المجسّم ٣٦٠° أو قرّب بإصبعين للتكبير • المس الحلقات المضيئة للتفاعل</div>
+    <div id="build-step-pill" class="build-step-pill" hidden aria-live="polite"></div>
+  </header>
+
+  <!-- AR Scanning Guide -->
+  <div id="scan-guide" class="scan-guide" hidden aria-live="polite">
+    <div class="scan-frame">
+      <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+    </div>
+    <p id="scan-guide-text">وجّه الكاميرا إلى رسمة ص ٣ (الثلاجة)، ص ٥ (المسعر)، ص ٨ (البلّورات)، أو ص ١١ (الكمّادات) في المجلة</p>
+  </div>
+
+  <!-- Bottom Interactive Dock -->
+  <footer id="hud-bottom" class="hud-bottom" hidden>
+    <div id="sub-exp-bar" class="sub-exp-bar">
+      <button class="sub-exp-btn active" data-sub-idx="0" type="button">١. التجربة الأولى</button>
+      <button class="sub-exp-btn" data-sub-idx="1" type="button">٢. التجربة الثانية</button>
+    </div>
+
+    <div id="state-banner" class="state-banner" aria-live="polite">
+      <strong id="lesson-badge">ص ٢–٣</strong>
+      <span id="state-description"></span>
+    </div>
+
+    <div class="controls-row">
+      <button id="btn-hold-action" class="hold-btn" type="button">
+        <span class="hold-fill" id="hold-fill"></span>
+        <span class="hold-label" id="hold-label">🔥 اضغط مطوّلًا للتسخين</span>
+      </button>
+      <button id="btn-secondary-action" class="aux-btn" type="button">❄️ تبريد</button>
+      <button id="btn-tertiary-action" class="aux-btn" type="button" hidden>↺ إعادة</button>
+    </div>
+  </footer>
+
+  <div id="loading-overlay" class="loading-overlay" hidden role="status">
+    <div class="spinner"></div>
+    <p id="loading-text">جارٍ تجهيز المعمل ثلاثي الأبعاد...</p>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
